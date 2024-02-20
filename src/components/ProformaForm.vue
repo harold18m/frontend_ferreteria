@@ -1,62 +1,70 @@
 <template>
     <div id="app" class="container mx-auto p-6">
-      <h1 class="text-4xl text-center font-bold mb-4">Generador de Proformas</h1>
+      <h1 class="text-5xl text-center font-bold mb-6">Generador de Proformas 🧑‍💻</h1>
       <form @submit.prevent="submitForm" class="w-full">
-        <div class="mb-4 flex justify-between items-center">
-          <div class="w-1/3">
-            <label for="cliente" class="block text-gray-700 text-1xl font-bold mb-2">Cliente:</label>
-            <input type="text" placeholder="Ingrese el nombre del cliente" v-model="cliente" id="cliente" name="cliente" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-          </div>
-          <div>
-            <button @click.prevent="nuevoFormulario" class="action-btn right text-white py-2 px-4 rounded">Nueva proforma</button>
-          </div>
-        </div>
         <table class="w-full table-auto">
           <thead>
               <tr>
-                <th class="table-header cantidad">Cantidad (Unidades)</th>
-                <th class="table-header descripcion">Descripción</th>
-                <th class="table-header punit">P. Unit  (S/)</th>
-                <th class="table-header importe">Importe</th>
-                <th class="table-header acciones">Acciones</th>
+                <th class="table-header-1 cantidad"> <div class="">Cliente</div></th>
+                <th class="table-header-1 descripcion"><div class="">Dirección</div></th>
+                <th class="table-header-1 punit"></th>
+                <th class="table-header-1 importe"></th>
+                <th class="table-header-1"></th>
+              </tr>
+            </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" placeholder="Ingrese el nombre del cliente" v-model="cliente" id="cliente" name="cliente" class="input-field"></td>
+              <td><input type="text" placeholder="Ingrese la dirección del cliente" v-model="direccion" id="direccion" name="direccion" class="input-field"></td>
+              <td colspan="2"></td>
+              <td><button @click.prevent="nuevoFormulario" class="action-btn">Nueva proforma</button></td>
+            </tr>
+          </tbody>
+        </table> 
+        <table class="w-full table-auto">
+          <thead>
+              <tr>
+                <th class="table-header-1 cantidad"><div class="theader">Cantidad (Unidades)</div></th>
+                <th class="table-header-1 descripcion"><div class="theader">Descripción</div></th>
+                <th class="table-header-1 punit"><div class="theader">P. Unit  (S/)</div></th>
+                <th class="table-header-1 importe"><div class="theader">Importe</div></th>
+                <th class="table-header-1 acciones"><div class="theader">Acciones</div></th>
               </tr>
             </thead>
           <tbody>
             <tr v-for="(item, index) in proformaItems" :key="index">
-              <td><input type="number" required placeholder="10" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
-              <td><input type="text"  required placeholder="Nombre del producto" v-model="item.descripcion" name="descripcion" class="input-field" @keydown.enter.prevent></td>
-              <td><input type="number" required placeholder="10.00" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
+              <td><input type="number" placeholder="10" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
+              <td><input type="text"  placeholder="Nombre del producto" v-model="item.descripcion" name="descripcion" class="input-field" @keydown.enter.prevent></td>
+              <td><input type="number" placeholder="10.00" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
               <td><input type="number" v-model="item.importe" name="importe" step="0.01" class="input-field" readonly @keydown.enter.prevent></td>
               <td><button @click.prevent="eliminarFila(index)" class="delete-btn" style="margin-left: 12%;">Eliminar</button></td>
             </tr>
             <tr>
               <td colspan="2"></td>
-              <td class="font-bold text-left">Importe Total:</td>
-              <td>S/{{ importeTotal }} </td>
+              <td class="font-bold text-right pr-2">Importe Total:</td>
+              <td><input type="number" :value="importeTotal" class="input-field" readonly></td>
+              <td></td>
             </tr>
           </tbody>
         </table>
         <div class="button-container">
             <button @click.prevent="agregarFila" class="action-btn add" >Agregar Fila</button>
             <input type="submit" value="Guardar" class="action-btn right">
-            <button @click.prevent="imprimir" class="action-btn right" :disabled="!datosGuardados">Imprimir</button>
-            <button @click.prevent="copiarAlPortapapeles" class="action-btn right" :disabled="!datosGuardados">Copiar al Portapapeles</button>
         </div>
       </form>
-      <div :style="{ opacity: mensaje ? 1 : 0 }" class="mensaje-verificacion">
-        {{ mensaje }}
-      </div>
     </div>
   </template>
   
   <script>
 
-import axios from 'axios';
+import Swal from 'sweetalert2';
+import api from '../api';
 
   export default {
     data() {
       return {
         cliente: '',
+        direccion: '',
         mensaje: '',
         proformaItems: [
           { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
@@ -78,11 +86,8 @@ import axios from 'axios';
       }
     },
     methods: {
-      imprimir() {
-        
-        window.print();
-      },
       nuevoFormulario() {
+          this.direccion = '';
           this.cliente = '';
           this.mensaje = '';
           this.proformaItems = [
@@ -118,25 +123,39 @@ import axios from 'axios';
         });
       },
       submitForm() {
-      // Calcular el importe total
-      const importeTotal = this.proformaItems.reduce((total, item) => total + Number(item.importe), 0);
+        const importeTotal = this.proformaItems.reduce((total, item) => total + Number(item.importe), 0);
+        const dataToSend = {
+          direccion: this.direccion,
+          cliente: this.cliente,
+          proformaItems: this.proformaItems,
+          importeTotal: importeTotal
+        };
 
-      // Obtener solo los datos necesarios sin la envoltura reactiva
-      const dataToSend = {
-        cliente: this.cliente,
-        proformaItems: this.proformaItems,
-        importeTotal: importeTotal
-      };
-      axios.post('http://127.0.0.1:8000/api/crear_proforma/', dataToSend)
-        .then(response => {
-          this.mensaje = response.data.message;
-          setTimeout(() => {
-            this.mensaje = '';
-          }, 3000);
-        });
-        console.log('Formulario enviado:', dataToSend);
-        this.datosGuardados = true;
-    }
+        api.post('api/crear-proforma/', dataToSend)
+          .then(response => {
+            Swal.fire(
+              '¡Éxito!',
+              response.data.message,
+              'success'
+            )
+            this.datosGuardados = true;
+          })
+          .catch(error => {
+            if (error.response && error.response.data) {
+              Swal.fire(
+                'Error',
+                error.response.data.message,
+                'error'
+              )
+            } else {
+              Swal.fire(
+                'Error',
+                'Ocurrió un error al crear la proforma',
+                'error'
+              )
+            }
+          });
+      }
     }
   };
   </script>
@@ -147,8 +166,8 @@ import axios from 'axios';
   bottom: 20px;
   right: 20px;
   padding: 15px;
-  background-color: #3bb35b;
-  color: white;
+  background-color: #d2e062;
+  color: #1a58b8;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   font-size: 18px;
@@ -162,7 +181,7 @@ import axios from 'axios';
  .input-cliente {
   width: 33.33%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid black;
   border-radius: 4px;
   margin-bottom: 8px;
 }
@@ -170,7 +189,6 @@ import axios from 'axios';
 .input-field {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: 8px;
 }
@@ -180,34 +198,51 @@ import axios from 'axios';
   width: 100%;
   margin-bottom: 16px;
 }
-
-.table-header.cantidad {
+.theader {
+  font-weight: bold;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 5px;
+  text-align: center;
+  background-color: #f2f2f2;
+}
+.table-header-1.cantidad {
   width: 15%; /* Ajusta este valor según tus necesidades */
 }
 
-.table-header.descripcion {
+.table-header-1.descripcion {
   width: 40%; /* Ajusta este valor según tus necesidades */
 }
 
-.table-header.punit {
+.table-header-1.punit {
   width: 15%; /* Ajusta este valor según tus necesidades */
 }
 
-.table-header.importe {
+.table-header-1.importe {
   width: 15%; /* Ajusta este valor según tus necesidades */
 }
 
-.table-header.acciones {
+.table-header-1.acciones {
   width: 10%; /* Ajusta este valor según tus necesidades */
 }
 
-.table-header,
-.input-field,
+.table-header-1 {
+  color: black;
+}
+
+.input-field {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid rgb(143, 140, 140);
+  border-radius: 4px;
+}
 .delete-btn,
 .action-btn {
   padding: 8px;
-  text-align: left;
-  border: 1px solid #ddd;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 4px;
 }
 
 .button-container {
@@ -223,12 +258,13 @@ import axios from 'axios';
 .delete-btn{
   background-color: #e71607;
   color: white;
-  border: none;
+  border: black 1px solid;
   border-radius: 4px;
   cursor: pointer;
 }
 .action-btn.add {
   background-color: #5cb800;
+  color: black;
 }
 .action-btn.add:hover {
   background-color: #4d9b00;
@@ -236,7 +272,7 @@ import axios from 'axios';
 .action-btn {
   background-color: #074783;
   color: white;
-  border: none;
+  border: solid 1px solid;
   border-radius: 4px;
   cursor: pointer;
 }

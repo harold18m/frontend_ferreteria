@@ -1,15 +1,17 @@
 <template>
   <div id="app" class="container mx-auto p-6">
     <h1 class="text-4xl text-center font-bold mb-4">Historial de Proformas</h1>
-    <div class="flex mb-4">
-      <input v-model="searchTerm" placeholder="Buscar proformas" class="p-2 border border-gray-300 rounded-l-md" @keyup.enter="searchProformas">
-      <button @click="searchProformas" class="p-2 bg-blue-500 text-white rounded-r-md">Buscar</button>
+    <div class="flex flex-col md:flex-row mb-4">
+      <input v-model="searchTerm" placeholder="Buscar proformas" class="p-2 border border-gray-300 rounded-l-md md:rounded-r-none" @keyup.enter="searchProformas">
+      <button @click="searchProformas" class="p-2 text-white rounded-r-md md:rounded-l-none" style="background-color: #0c3f81;">Buscar</button>
     </div>
-    <table class="min-w-full divide-y border-2 divide-gray-200">
-      <thead class="bg-gray-200">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y border-2 divide-gray-200">
+        <thead class="bg-gray-200">
         <tr>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider"># Numero Proforma</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Cliente</th>
+          <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Dirección</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Fecha</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Hora</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Importe Total</th>
@@ -17,28 +19,33 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr v-for="proforma in proformas" :key="proforma.id">
+        <tr v-for="proforma in proformas" :key="proforma.id" :id="'proforma-' + proforma.id">
           <td class="px-6 py-4 whitespace-nowrap">#{{ proforma.numero_proforma }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ proforma.cliente }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ proforma.direccion }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(proforma.fecha) }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatTime(proforma.hora) }}</td>
           <td class="px-6 py-4 whitespace-nowrap">S/. {{ proforma.importe_total }}</td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(proforma.id)"><img class="text-green-500 hover:text-green-800 mx-1" src="@/assets/visibility.svg" alt="Icono SVG"></button>
+            <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(proforma.id)"><img class="visibility" src="@/assets/visibility.svg"></button>
             <ProformaDetalle 
+              ref="proformaDetalle"
               v-if="showModal && selectedProformaId === proforma.id" 
               @close="closeModal" 
               :proformaId="selectedProformaId" 
               :numeroProforma="proforma.numero_proforma" 
               :fecha="proforma.fecha" 
+              :hora="proforma.hora"
+              :cliente="proforma.cliente"
+              :direccion="proforma.direccion"
               :importeTotal="proforma.importe_total" 
             />
-            <button class="text-red-500 hover:text-red-800 mx-1" @click="imprimirProforma(proforma.id)"><img src="@/assets/print.svg" alt="Icono SVG"></button>
-            <button class="text-blue-500 hover:text-blue-800 mx-1" @click="copiarProforma(proforma.id)"><img src="@/assets/content_copy.svg" alt="Icono SVG"></button>
+            <button @click="imprimirProforma(proforma.id)"><img class="print" src="@/assets/print.svg"></button>
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
+    </div>
     <div class="flex justify-center m-5">
       <button @click="fetchProformas(prevPage)" :disabled="!prevPage" class="p-2 bg-gray-300 text-gray-700 rounded-md mx-2">Anterior</button>
       <button @click="fetchProformas(nextPage)" :disabled="!nextPage" class="p-2 bg-gray-300 text-gray-700 rounded-md mx-2">Siguiente</button>
@@ -47,7 +54,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+import api from '../api';
 import ProformaDetalle from './ProformaDetalle.vue';
 
 export default {
@@ -65,10 +73,11 @@ export default {
       totalProformas: 0,
     };
   },
-  methods: {
-      imprimirProforma(proformaId) {
-        fetch(`http://127.0.0.1:8000/api/imprimir_proforma/${proformaId}/`, {
-          method: 'GET',
+
+    methods: {
+      
+        imprimirProforma(proformaId) {
+        api.get(`api/imprimir-proforma/${proformaId}/`, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -86,8 +95,33 @@ export default {
           console.error('Error al imprimir la proforma:', error);
         });
       },
-    fetchProformas(url = 'http://127.0.0.1:8000/api/historial_proformas/') {
-      axios.get(url)
+
+      // Método para recuperar proformas
+      fetchProformas(url = 'api/historial-proformas/') {
+        api.get(url, {
+            headers: {
+              'Authorization': `Token ${localStorage.getItem('token')}`
+            }})
+          .then(response => {
+            this.proformas = response.data.results;
+            this.nextPage = response.data.next;
+            this.prevPage = response.data.previous;
+            this.totalProformas = response.data.count;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      },
+
+      // Método para buscar proformas
+      searchProformas() {
+        if (!isNaN(this.searchTerm)) {
+          const url = `api/historial-proformas/?numero_proforma=${this.searchTerm}`;
+          
+          api.get(url, {
+          headers: {
+            'Authorization': `Token ${localStorage.getItem('token')}`
+          }})
         .then(response => {
           this.proformas = response.data.results;
           this.nextPage = response.data.next;
@@ -97,25 +131,11 @@ export default {
         .catch(error => {
           console.error(error);
         });
-    },
-    searchProformas() {
-  if (!isNaN(this.searchTerm)) {
-    const url = `http://127.0.0.1:8000/api/historial_proformas/?numero_proforma=${this.searchTerm}`;
-    
-    axios.get(url)
-      .then(response => {
-        this.proformas = response.data.results;
-        this.nextPage = response.data.next;
-        this.prevPage = response.data.previous;
-        this.totalProformas = response.data.count;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  } else {
-    console.error('El término de búsqueda debe ser un número válido.');
-  }
-},
+    } else {
+      console.error('El término de búsqueda debe ser un número válido.');
+    }
+  },
+
     formatDate(dateString) {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       return new Date(dateString).toLocaleDateString('es-ES', options);
@@ -141,3 +161,27 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+img {
+  border: black 1px solid;
+  border-radius: 5px;
+  padding: 5px;
+  margin-right: 5px;
+}
+.visibility {
+  background-color: #2f80ed;
+}
+.visibility:hover {
+  background-color: #0c3f81;
+}
+
+.print {
+  background-color: #749e0c;
+}
+.print:hover {
+  background-color: #3a4e05;
+}
+
+
+</style>

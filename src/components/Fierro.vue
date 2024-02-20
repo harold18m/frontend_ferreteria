@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import api from '../api';
+
 export default {
   data() {
     return {
@@ -88,11 +90,9 @@ export default {
       return precioVenta - precioCompra;
     },
     fetchExchangeRate() {
-      const apiUrl = `http://127.0.0.1:8000/api/tipo-de-cambio/`;
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          this.usdToPenExchangeRate = data.tipo_de_cambio;
+      api.get('api/tipo-de-cambio/')
+        .then(response => {
+          this.usdToPenExchangeRate = response.data.tipo_de_cambio;
         })
         .catch(error => console.error('Error al obtener la tasa de cambio:', error));
     },

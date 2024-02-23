@@ -6,7 +6,6 @@
           <input type="checkbox" v-model="task.completed" @change="confirmCompletion(task)" class="mr-2">
           <span v-if="task.numeroProforma !== null" :class="{ 'line-through text-gray-600 font-bold': task.completed }">{{ task.numeroProforma }}</span>
           <span v-if="task.direccion !== null" :class="{ 'line-through text-gray-600': task.completed }">{{ " " + "-" + " " + task.direccion }}</span>
-          <span v-if="task.cliente !== null" :class="{ 'line-through text-gray-600': task.completed }">{{ " " + "-" + " " + task.cliente }}</span>
           <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(task.id)"><img class="visibility" src="@/assets/visibility.svg"></button>
           <ProformaDetalle 
             ref="proformaDetalle"

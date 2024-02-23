@@ -3,7 +3,8 @@
     <div ref="proformaDetalle" v-if="item_proforma" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-8 rounded-md border-2 max-w-2xl w-full" >
         <!-- Contenido del modal -->
-        <div ref="proformaContent" class="m-2"> 
+        <div ref="proformaContent"> 
+        <div class="container-principal">
           <p class="text-center mb-3">FERRETERIA VIRGEN DE GUADALUPE</p>
           <p class="text-center">Telf: 975 495 081 / 946 367 808 </p>
           <p class="text-center">PROFORMA #{{ numeroProforma }} </p>
@@ -65,6 +66,10 @@
             </tr>
           </tbody>
         </table>
+        <div>
+          <p class="text-black text-opacity-0 p-0">Hola</p>
+        </div>
+        </div>
         </div>
         <div class="button-container mt-2">
           <button @click="$emit('close')" class="px-4 py-2 mx-2 bg-blue-500 text-white rounded-md">Cerrar</button>
@@ -180,6 +185,10 @@
   </script>
   
   <style scoped>
+  .container-principal {
+    margin: 15px;
+  }
+  
   .container {
   display: flex;
   justify-content: space-between;

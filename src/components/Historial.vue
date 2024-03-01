@@ -137,8 +137,8 @@ export default {
   },
 
     formatDate(dateString) {
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      return new Date(dateString).toLocaleDateString('es-ES', options);
+      const [year, month, day] = dateString.split('-');
+      return `${day}/${month}/${year}`;
     },
     formatTime(time) {
     const [hour, minute] = time.split(':');

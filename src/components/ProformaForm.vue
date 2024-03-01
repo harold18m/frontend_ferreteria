@@ -1,6 +1,6 @@
 <template>
     <div id="app" class="container mx-auto p-6">
-      <h1 class="text-5xl text-center font-bold mb-6">Generador de Proformas 🧑‍💻</h1>
+      <h1 class="text-4xl text-center font-bold mb-6">Generador de Proformas 🧑‍💻</h1>
       <form @submit.prevent="submitForm" class="w-full">
         <table class="w-full table-auto">
           <thead>
@@ -50,6 +50,9 @@
         <div class="button-container">
             <button @click.prevent="agregarFila" class="action-btn add" >Agregar Fila</button>
             <input type="submit" value="Guardar" class="action-btn right">
+            <!-- <div v-if="datosGuardados">
+              <button type="button" @click="imprimirProforma" class="action-btn right">Imprimir</button>
+            </div> -->
         </div>
       </form>
     </div>
@@ -86,12 +89,6 @@ import api from '../api';
       }
     },
     methods: {
-      formatoMoneda(valor) {
-        return valor.toLocaleString('es-PE', {
-          style: 'currency',
-          currency: 'PEN'
-        });
-      },
       calcularImporte(item) {
       return (item.cantidad * item.punit).toFixed(2);
       },
@@ -126,8 +123,17 @@ import api from '../api';
         console.error('Error en recalcularImporteTotal:', error);
       }
     },  
+    imprimirProforma() {
+        axios.get('api/imprimir-ultima-proforma/')
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    },
       submitForm() {
-
+        this.datosGuardados = true;
         const dataToSend = {
           direccion: this.direccion,
           cliente: this.cliente,
@@ -139,7 +145,6 @@ import api from '../api';
           })),
           importeTotal: this.importeTotal
         };
-        console.log(dataToSend);
         api.post('api/crear-proforma/', dataToSend)
           .then(response => {
             Swal.fire(

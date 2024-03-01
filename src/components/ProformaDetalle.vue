@@ -100,53 +100,67 @@
         date.setMinutes(+minute);
         return date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: true });
       },
-      fetchProforma() {
-        api.get(`api/historial-proformas/${this.proformaId}`)
-          .then(response => {
-            this.item_proforma = response.data;
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+      async fetchProforma() {
+        try {
+          const response = await api.get(`api/historial-proformas/${this.proformaId}`);
+          this.item_proforma = response.data;
+        } catch (error) {
+          console.error('Error:', error);
+        }
       },
       formatDate(dateString) {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       return new Date(dateString).toLocaleDateString('es-ES', options);
         },
 
+      async solicitarPermisoPortapapeles() {
+        try {
+          const permiso = await navigator.permissions.query({name: "clipboard-write"});
+          if (permiso.state === "granted") {
+            console.log('Permiso del portapapeles concedido');
+          } else if (permiso.state === "prompt") {
+            console.log('El usuario debe conceder el permiso del portapapeles');
+          } else {
+            console.log('Permiso del portapapeles no concedido');
+          }
+        } catch (err) {
+          console.error('Error al solicitar el permiso del portapapeles: ', err);
+        }
+      },
+
       //copiar proforma
       copiarProforma() {
-  const proformaElement = this.$refs.proformaContent;
+        const proformaElement = this.$refs.proformaContent;
 
-  html2canvas(proformaElement).then(canvas => {
-    // Obtener el Blob del canvas
-    return new Promise((resolve, reject) => {
-      canvas.toBlob(blob => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          reject(new Error('Error al obtener el Blob'));
-        }
-      }, 'image/png');
-    });
-  }).then(blob => {
-    // Crear un ClipboardItem con el Blob
-    const item = new ClipboardItem({ 'image/png': blob });
+        html2canvas(proformaElement).then(canvas => {
+          // Obtener el Blob del canvas
+          return new Promise((resolve, reject) => {
+            canvas.toBlob(blob => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error('Error al obtener el Blob'));
+              }
+            }, 'image/png');
+          });
+        }).then(blob => {
+          // Crear un ClipboardItem con el Blob
+          const item = new ClipboardItem({ 'image/png': blob });
 
-    // Copiar el objeto ClipboardItem al portapapeles
-    return navigator.clipboard.write([item]);
-  }).then(() => {
-    Swal.fire({
-      position: "top-end",
-      icon: "success",
-      title: "Copiado al portapapeles",
-      showConfirmButton: false,
-      timer: 1500
-    });
-  }).catch(error => {
-    console.error('Error al copiar la imagen al portapapeles:', error);
-  });
-},
+          // Copiar el objeto ClipboardItem al portapapeles
+          return navigator.clipboard.write([item]);
+        }).then(() => {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Copiado al portapapeles",
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }).catch(error => {
+          console.error('Error al copiar la imagen al portapapeles:', error);
+        });
+      },
       
     generarImagen() {
         this.$nextTick(() => {
@@ -180,6 +194,7 @@
     mounted() {
       this.fetchProforma();
       this.generarImagen();
+      this.solicitarPermisoPortapapeles();
     },
   };
   </script>

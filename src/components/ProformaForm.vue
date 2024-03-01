@@ -31,21 +31,21 @@
                 <th class="table-header-1 acciones"><div class="theader">Acciones</div></th>
               </tr>
             </thead>
-          <tbody>
-            <tr v-for="(item, index) in proformaItems" :key="index">
-              <td><input type="number" placeholder="10" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
-              <td><input type="text"  placeholder="Nombre del producto" v-model="item.descripcion" name="descripcion" class="input-field" @keydown.enter.prevent></td>
-              <td><input type="number" placeholder="10.00" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
-              <td><input type="number" v-model="item.importe" name="importe" step="0.01" class="input-field" readonly @keydown.enter.prevent></td>
-              <td><button @click.prevent="eliminarFila(index)" class="delete-btn" style="margin-left: 12%;">Eliminar</button></td>
-            </tr>
-            <tr>
-              <td colspan="2"></td>
-              <td class="font-bold text-right pr-2">Importe Total:</td>
-              <td><input type="number" :value="importeTotal" class="input-field" readonly></td>
-              <td></td>
-            </tr>
-          </tbody>
+            <tbody>
+              <tr v-for="(item, index) in proformaItems" :key="index">
+                <td><input type="number" placeholder="10" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
+                <td><input type="text" placeholder="Nombre del producto" v-model="item.descripcion" name="descripcion" class="input-field" @keydown.enter.prevent></td>
+                <td><input type="number" placeholder="10.00" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
+                <td><input type="text" :value="calcularImporte(item)"  name="importe" class="input-field" readonly @keydown.enter.prevent></td>
+                <td><button @click.prevent="eliminarFila(index)" class="delete-btn" style="margin-left: 12%;">Eliminar</button></td>
+              </tr>
+              <tr>
+                <td colspan="2"></td>
+                <td class="font-bold text-right pr-2">Importe Total:</td>
+                <td><input type="text" :value="importeTotal" class="input-field" readonly></td>
+                <td></td>
+              </tr>
+            </tbody>
         </table>
         <div class="button-container">
             <button @click.prevent="agregarFila" class="action-btn add" >Agregar Fila</button>
@@ -86,6 +86,15 @@ import api from '../api';
       }
     },
     methods: {
+      formatoMoneda(valor) {
+        return valor.toLocaleString('es-PE', {
+          style: 'currency',
+          currency: 'PEN'
+        });
+      },
+      calcularImporte(item) {
+      return (item.cantidad * item.punit).toFixed(2);
+      },
       nuevoFormulario() {
           this.direccion = '';
           this.cliente = '';
@@ -108,37 +117,36 @@ import api from '../api';
         this.proformaItems.splice(index, 1);
       },
       recalcularImporteTotal() {
+      try {
         this.importeTotal = this.proformaItems.reduce((total, item) => {
-          item.importe = item.cantidad * item.punit;
-          item.importe = parseFloat(item.importe.toFixed(2)).toLocaleString('es-PE', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-            useGrouping: false
-          });
-          return total + parseFloat(item.importe.replace(',', '')) || 0;
-        }, 0).toFixed(2).toLocaleString('es-PE', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-          useGrouping: false
-        });
-      },
+          const importe = item.cantidad * item.punit;
+          return total + importe;
+        }, 0).toFixed(2);
+      } catch (error) {
+        console.error('Error en recalcularImporteTotal:', error);
+      }
+    },  
       submitForm() {
-        const importeTotal = this.proformaItems.reduce((total, item) => total + Number(item.importe), 0);
+
         const dataToSend = {
           direccion: this.direccion,
           cliente: this.cliente,
-          proformaItems: this.proformaItems,
-          importeTotal: importeTotal
+          proformaItems: this.proformaItems.map(item => ({
+            cantidad: item.cantidad,
+            descripcion: item.descripcion,
+            punit: item.punit,
+            importe: item.cantidad * (item.punit || 0) 
+          })),
+          importeTotal: this.importeTotal
         };
-
+        console.log(dataToSend);
         api.post('api/crear-proforma/', dataToSend)
           .then(response => {
             Swal.fire(
               '¡Éxito!',
               response.data.message,
               'success'
-            )
-            this.datosGuardados = true;
+            );
           })
           .catch(error => {
             if (error.response && error.response.data) {

@@ -50,9 +50,29 @@
         <div class="button-container">
             <button @click.prevent="agregarFila" class="action-btn add" >Agregar Fila</button>
             <input type="submit" value="Guardar" class="action-btn right">
-            <!-- <div v-if="datosGuardados">
+            <div v-if="datosGuardados">
+              <div id="printableArea" class="hidden">
+                <p>**FERRETERIA VIRGEN DE GUADALUPE**</p>
+                <p>Telf: 975 495 081 / 943 367 808</p>
+                <p>PROFORMA: {{ Math.floor(Math.random() * 1000000) }}</p>
+                <p>FECHA: {{ new Date().toLocaleDateString() }}</p>
+                <p>CLIENTE: {{ cliente }}</p>
+                <p>DIRECCION: {{ direccion }}</p>
+                <p v-for="(item, index) in proformaItems" :key="index">
+                  <p>------------------------------------</p>
+                  <p>DESCRIPCION: {{ item.descripcion }}</p>
+                  <p>CANT: {{ item.cantidad }}</p>
+                  <p>P. UNIT: S/{{ item.punit }}</p>
+                  <p>IMPORTE: S/{{ item.importe }}</p>
+                </p>
+                <p>------------------------------------</p>
+                <p>Total a pagar : S/{{ importeTotal }}</p>
+                <p>------------------------------------</p>
+                <p>GRACIAS POR SU PREFERENCIA !!</p>
+                <p>No hay devoluciones</p>
+              </div>
               <button type="button" @click="imprimirProforma" class="action-btn right">Imprimir</button>
-            </div> -->
+            </div>
         </div>
       </form>
     </div>
@@ -124,13 +144,29 @@ import api from '../api';
       }
     },  
     imprimirProforma() {
-        axios.get('api/imprimir-ultima-proforma/')
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+      const printableArea = document.getElementById('printableArea');
+      const printWindow = window.open('', '_blank', 'width=600,height=600');
+      printWindow.document.open();
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Proforma</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+              }
+              p {
+                margin: 0;
+              }
+            </style>
+          </head>
+          <body>
+            ${printableArea.innerHTML}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
     },
       submitForm() {
         this.datosGuardados = true;
@@ -174,22 +210,9 @@ import api from '../api';
   </script>
 
   <style scoped>
-  .mensaje-verificacion {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 15px;
-  background-color: #d2e062;
-  color: #1a58b8;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  width: 250px;
-  z-index: 1000;
-  transition: opacity 0.5s ease-in-out;
-}
+  .hidden {
+    display: none;
+  }
 
  .input-cliente {
   width: 33.33%;

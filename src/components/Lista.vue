@@ -4,7 +4,8 @@
       <ul>
         <li v-for="task in tasks" :key="task.id" class="flex items-center mb-2">
           <input type="checkbox" v-model="task.completed" @change="confirmCompletion(task)" class="mr-2">
-          <span v-if="task.numeroProforma !== null" :class="{ 'line-through text-gray-600 font-bold': task.completed }">{{ task.numeroProforma }}</span>
+          <span class="{ 'line-through text-gray-600 font-bold': task.completed }">🏷️#{{ task.numeroProforma }}</span>
+          <span class="{ 'line-through text-gray-600 font-bold': task.completed }">⌚Fecha: {{ task.fecha }}</span>
           <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(task.id)"><img class="visibility" src="@/assets/visibility.svg"></button>
           <ProformaDetalle 
             ref="proformaDetalle"
@@ -64,11 +65,13 @@ export default {
           const response = await api.post('api/proformas-pendientes/', {
             id: task.id,
           });
-          Swal.fire(
-            'Completado!',
-            'La tarea ha sido marcada como completada.',
-            'success'
-          );
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Pedido completado",
+            showConfirmButton: false,
+            timer: 1000
+          });
         } else {
           task.completed = false;
         }

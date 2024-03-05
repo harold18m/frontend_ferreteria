@@ -33,9 +33,9 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in proformaItems" :key="index">
-                <td><input type="number" placeholder="10" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
+                <td><input type="number" placeholder="#" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
                 <td><input type="text" placeholder="Nombre del producto" v-model="item.descripcion" name="descripcion" class="input-field" @keydown.enter.prevent></td>
-                <td><input type="number" placeholder="10.00" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
+                <td><input type="number" placeholder="$" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
                 <td><input type="text" :value="calcularImporte(item)"  name="importe" class="input-field" readonly @keydown.enter.prevent></td>
                 <td><button @click.prevent="eliminarFila(index)" class="delete-btn" style="margin-left: 12%;">Eliminar</button></td>
               </tr>
@@ -51,27 +51,28 @@
             <button @click.prevent="agregarFila" class="action-btn add" >Agregar Fila</button>
             <input type="submit" value="Guardar" class="action-btn right">
             <div v-if="datosGuardados">
+              <button type="button" @click="imprimirProforma" class="action-btn right">Imprimir</button>
               <div id="printableArea" class="hidden">
-                <p>**FERRETERIA VIRGEN DE GUADALUPE**</p>
+                <p>FERRETERIA VIRGEN DE GUADALUPE</p>
                 <p>Telf: 975 495 081 / 943 367 808</p>
-                <p>PROFORMA: {{ Math.floor(Math.random() * 1000000) }}</p>
-                <p>FECHA: {{ new Date().toLocaleDateString() }}</p>
-                <p>CLIENTE: {{ cliente }}</p>
-                <p>DIRECCION: {{ direccion }}</p>
-                <p v-for="(item, index) in proformaItems" :key="index">
+                <p>Proforma: {{ numeroProforma }}</p>
+                <p>Fecha: {{ new Date().toLocaleDateString() }}</p>
+                <p>Hora: {{ new Date().toLocaleTimeString() }}</p>
+                <p>Cliente: {{ cliente }}</p>
+                <p>Dirección: {{ direccion }}</p>
+                <p v-for="(item, index) in filteredProformaItems" :key="index">
                   <p>------------------------------------</p>
-                  <p>DESCRIPCION: {{ item.descripcion }}</p>
-                  <p>CANT: {{ item.cantidad }}</p>
-                  <p>P. UNIT: S/{{ item.punit }}</p>
-                  <p>IMPORTE: S/{{ item.importe }}</p>
+                  <p>Descripcion: {{ item.descripcion }}</p>
+                  <p>Cant: {{ item.cantidad }}</p>
+                  <p>P. Unit: S/{{ item.punit }}</p>
+                  <p>Importe: S/{{ item.cantidad * item.punit }}</p>
                 </p>
                 <p>------------------------------------</p>
                 <p>Total a pagar : S/{{ importeTotal }}</p>
                 <p>------------------------------------</p>
                 <p>GRACIAS POR SU PREFERENCIA !!</p>
-                <p>No hay devoluciones</p>
+                <p style="font-size: 0.8em;">No hay devoluciones</p>
               </div>
-              <button type="button" @click="imprimirProforma" class="action-btn right">Imprimir</button>
             </div>
         </div>
       </form>
@@ -86,17 +87,18 @@ import api from '../api';
   export default {
     data() {
       return {
+        numeroProforma: '#########',
         cliente: '',
         direccion: '',
         mensaje: '',
         proformaItems: [
-          { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: 1, descripcion: '', punit: null, importe: 0.00 }
+          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', punit: null, importe: 0.00 }
         ],
-        importeTotal: 0,
+        importeTotal: "0.00",
         datosGuardados: false
       };
     },
@@ -108,6 +110,11 @@ import api from '../api';
         deep: true
       }
     },
+    computed: {
+      filteredProformaItems() {
+      return this.proformaItems.filter(item => item.punit !== null && item.cantidad !== null);
+    },
+    },
     methods: {
       calcularImporte(item) {
       return (item.cantidad * item.punit).toFixed(2);
@@ -117,13 +124,13 @@ import api from '../api';
           this.cliente = '';
           this.mensaje = '';
           this.proformaItems = [
-            { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: 1, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: 1, descripcion: '', punit: null, importe: 0.00 }
+            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', punit: null, importe: 0.00 }
           ];
-          this.importeTotal = 0;
+          this.importeTotal = 0.00;
           this.datosGuardados = false;
         },
       agregarFila() {
@@ -156,7 +163,10 @@ import api from '../api';
                 font-family: Arial, sans-serif;
               }
               p {
-                margin: 0;
+                margin: 5px;
+              }
+              h1 {
+                text-align: center;
               }
             </style>
           </head>
@@ -167,18 +177,21 @@ import api from '../api';
       `);
       printWindow.document.close();
       printWindow.print();
+      printWindow.close();
     },
       submitForm() {
         this.datosGuardados = true;
         const dataToSend = {
           direccion: this.direccion,
           cliente: this.cliente,
-          proformaItems: this.proformaItems.map(item => ({
-            cantidad: item.cantidad,
-            descripcion: item.descripcion,
-            punit: item.punit,
-            importe: item.cantidad * (item.punit || 0) 
-          })),
+          proformaItems: this.proformaItems
+            .filter(item => item.cantidad * (item.punit || 0) !== 0)
+            .map(item => ({
+              cantidad: item.cantidad,
+              descripcion: item.descripcion,
+              punit: item.punit,
+              importe: item.cantidad * (item.punit || 0)
+            })),
           importeTotal: this.importeTotal
         };
         api.post('api/crear-proforma/', dataToSend)
@@ -188,6 +201,7 @@ import api from '../api';
               response.data.message,
               'success'
             );
+            this.numeroProforma = response.data.numero_proforma;
           })
           .catch(error => {
             if (error.response && error.response.data) {

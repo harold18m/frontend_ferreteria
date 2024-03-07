@@ -46,25 +46,39 @@
               :importeTotal="proforma.importe_total" 
             />
             <div id="printableArea" class="hidden">
-                <p>FERRETERIA VIRGEN DE GUADALUPE</p>
+                <h4>FERRETERIA VIRGEN DE GUADALUPE</h4>
                 <p>Telf: 975 495 081 / 943 367 808</p>
-                <p>Proforma: {{ numeroProforma }}</p>
-                <p>Fecha: {{ fecha }}</p>
-                <p>Hora: {{ hora }}</p>
+                <p>Proforma: #{{ numeroProforma }}</p>
+                <p>Fecha: {{ formatDate(fecha) }} {{ formatTime(hora) }}</p>
                 <p>Cliente: {{ cliente }}</p>
                 <p>Dirección: {{ direccion }}</p>
-                <p v-for="(item, index) in itemsProforma" :key="index">
-                  <p>------------------------------------</p>
-                  <p>Descripcion: {{ item.descripcion }}</p>
-                  <p>Cant: {{ item.cantidad }}</p>
-                  <p>P. Unit: S/{{ item.precio_unitario }}</p>
-                  <p>Importe: S/{{ item.importe }}</p>
-                </p>
-                <p>------------------------------------</p>
-                <p>Total a pagar : S/{{ importeTotal }}</p>
-                <p>------------------------------------</p>
-                <p>GRACIAS POR SU PREFERENCIA !!</p>
-                <p style="font-size: 0.8em;">No hay devoluciones</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="margin: 0px 0px;">Descripcion</th>
+                      <th>Cant</th>
+                      <th>P. Unit</th>
+                      <th>Importe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in itemsProforma" :key="index">
+                      <td>{{ item.descripcion }}</td>
+                      <td>{{ item.cantidad }}</td>
+                      <td>S/{{ item.precio_unitario }}</td>
+                      <td style="text-align: end;">S/{{ item.importe }}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4"><hr></td>
+                    </tr>
+                    <tr style="margin-top: 10px; border-top: 1px solid black;">
+                      <td colspan="3">Total a pagar: </td>
+                      <td>S/{{ importeTotal }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p style="font-size: 15px;">GRACIAS POR SU PREFERENCIA !!</p>
+                <p style="font-size: 0.8em; margin-left: 60px;">No hay devoluciones</p>
               </div>
             <button @click="imprimirProforma(proforma.id)"><img class="print" src="@/assets/print.svg"></button>
           </td>
@@ -107,56 +121,82 @@ export default {
     };
   },
 
-    methods: {
-      imprimirProforma(proformaId) {
+  methods: {
+    imprimirProforma(proformaId) {
+      // Crear la imagen y asignar la URL
+      const img = new Image();
+      img.src = 'http://3.143.220.6/ferreteria-logo.png';
+
+      // Manejar la carga de la imagen
+      img.onload = () => {
         api.get(`api/imprimir-proforma/${proformaId}/`, {
           headers: {
             'Content-Type': 'application/json',
           },
         })
         .then(response => {
-            this.numeroProforma = response.data.numero_proforma;
-            this.cliente = response.data.cliente;
-            this.direccion = response.data.direccion;
-            this.importeTotal = response.data.importe_total;
-            this.fecha = response.data.fecha;
-            this.hora = response.data.hora;
-            this.itemsProforma = response.data.proforma_items;
+          // Resto de tu lógica para obtener los datos de la proforma
+          this.numeroProforma = response.data.numero_proforma;
+          this.cliente = response.data.cliente;
+          this.direccion = response.data.direccion;
+          this.importeTotal = response.data.importe_total;
+          this.fecha = response.data.fecha;
+          this.hora = response.data.hora;
+          this.itemsProforma = response.data.proforma_items;
 
-            this.$nextTick(() => {
-              const printableArea = document.getElementById('printableArea');
-              const printWindow = window.open('', '_blank', 'width=600,height=600');
-              printWindow.document.open();
-              printWindow.document.write(`
-                <html>
-                  <head>
-                    <title>Proforma</title>
-                    <style>
-                      body {
-                        font-family: Arial, sans-serif;
-                      }
-                      p {
-                        margin: 5px;
-                      }
-                      h1 {
-                        text-align: center;
-                      }
-                    </style>
-                  </head>
-                  <body>
-                    ${printableArea.innerHTML}
-                  </body>
-                </html>
-              `);
-              printWindow.document.close();
-              printWindow.print();
-              printWindow.close();
-            });
-          })
+          this.$nextTick(() => {
+            // Resto de tu lógica para abrir la ventana de impresión
+            const printableArea = document.getElementById('printableArea');
+            let anchoVentana = 600;
+            let altoVentana = 600;
+            let posicionX = (window.screen.width / 2) - (anchoVentana / 2);
+            let posicionY = (window.screen.height / 2) - (altoVentana / 2);
+
+            const printWindow = window.open('', '_blank', `width=${anchoVentana},height=${altoVentana},left=${posicionX},top=${posicionY}`);
+            printWindow.document.open();
+            printWindow.document.write(`
+              <html>
+                <head>
+                  <title>Proforma</title>
+                  <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                    }
+                    img {
+                      border: black 1px solid;
+                      border-radius: 5px;
+                      margin-left: 80px;
+                      height: 70px;
+                      width: 70px;
+                    }
+                    P {
+                      margin: 0px;
+                    }
+                    table {
+                      margin-top: 10px;
+                      margin-bottom: 10px;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <img src="${img.src}" width="70px" height="70px">
+                  ${printableArea.innerHTML}
+                </body>
+              </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+            printWindow.close();
+          });
+        })
         .catch(error => {
           console.error(error);
         });
-      },
+      };
+      img.onerror = (error) => {
+        console.error('Error al cargar la imagen:', error);
+      };
+    },
       // Método para recuperar proformas
       fetchProformas(url = 'api/historial-proformas/') {
         api.get(url, {

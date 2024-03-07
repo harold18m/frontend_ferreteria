@@ -46,7 +46,6 @@ export default {
           username: this.username,
           password: this.password
         });
-        console.log(response);
         
         if (response.data.token) {
           localStorage.setItem('token', response.data.token);
@@ -56,7 +55,6 @@ export default {
         const errorMessage = error.response && error.response.data && error.response.data.detail
           ? error.response.data.detail
           : 'Usuario o contraseña incorrectos';
-          console.log(error);
         Swal.fire({
           icon: 'error',
           title: 'Acceso denegado',

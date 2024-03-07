@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-md mx-auto mt-8 p-4">
       <h1 class="text-3xl font-bold mb-4">Lista de Pedidos</h1>
-      <ul>
+      <ul v-if="tasks.length > 0">
         <li v-for="task in tasks" :key="task.id" class="flex items-center mb-2">
           <input type="checkbox" v-model="task.completed" @change="confirmCompletion(task)" class="mr-2">
           <span class="{ 'line-through text-gray-600 font-bold': task.completed }">🏷️#{{ task.numeroProforma }}</span>
@@ -21,6 +21,9 @@
           />
         </li>
       </ul>
+      <p v-else>
+        Estás al día, no hay proformas pendientes.
+      </p>
     </div>
   </template>
 <script>

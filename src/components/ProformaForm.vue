@@ -53,25 +53,39 @@
             <div v-if="datosGuardados">
               <button type="button" @click="imprimirProforma" class="action-btn right">Imprimir</button>
               <div id="printableArea" class="hidden">
-                <p>FERRETERIA VIRGEN DE GUADALUPE</p>
+                <h4>FERRETERIA VIRGEN DE GUADALUPE</h4>
                 <p>Telf: 975 495 081 / 943 367 808</p>
-                <p>Proforma: {{ numeroProforma }}</p>
-                <p>Fecha: {{ new Date().toLocaleDateString() }}</p>
-                <p>Hora: {{ new Date().toLocaleTimeString() }}</p>
+                <p>Proforma: #{{ numeroProforma }}</p>
+                <p>Fecha: {{ new Date().toLocaleDateString() }} {{ new Date().toLocaleTimeString() }}</p>
                 <p>Cliente: {{ cliente }}</p>
                 <p>Dirección: {{ direccion }}</p>
-                <p v-for="(item, index) in filteredProformaItems" :key="index">
-                  <p>------------------------------------</p>
-                  <p>Descripcion: {{ item.descripcion }}</p>
-                  <p>Cant: {{ item.cantidad }}</p>
-                  <p>P. Unit: S/{{ item.punit }}</p>
-                  <p>Importe: S/{{ item.cantidad * item.punit }}</p>
-                </p>
-                <p>------------------------------------</p>
-                <p>Total a pagar : S/{{ importeTotal }}</p>
-                <p>------------------------------------</p>
-                <p>GRACIAS POR SU PREFERENCIA !!</p>
-                <p style="font-size: 0.8em;">No hay devoluciones</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="margin: 0px 0px;">Descripcion</th>
+                      <th>Cant</th>
+                      <th>P. Unit</th>
+                      <th>Importe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="(item, index) in filteredProformaItems" :key="index">
+                    <td>{{ item.descripcion }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>S/{{ item.punit }}</td>
+                    <td>S/{{ item.cantidad * item.punit }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"><hr></td>
+                  </tr>
+                  <tr style="margin-top: 10px; border-top: 1px solid black;">
+                    <td colspan="3">Total a pagar: </td>
+                    <td>S/{{ importeTotal }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                <p style="font-size: 15px;">GRACIAS POR SU PREFERENCIA !!</p>
+                <p style="font-size: 0.8em; margin-left: 60px;">No hay devoluciones</p>
               </div>
             </div>
         </div>
@@ -152,28 +166,42 @@ import api from '../api';
     },  
     imprimirProforma() {
       const printableArea = document.getElementById('printableArea');
-      const printWindow = window.open('', '_blank', 'width=600,height=600');
+            let anchoVentana = 600;
+            let altoVentana = 600;
+            let posicionX = (window.screen.width / 2) - (anchoVentana / 2);
+            let posicionY = (window.screen.height / 2) - (altoVentana / 2);
+
+            const printWindow = window.open('', '_blank', `width=${anchoVentana},height=${altoVentana},left=${posicionX},top=${posicionY}`);
       printWindow.document.open();
       printWindow.document.write(`
-        <html>
-          <head>
-            <title>Proforma</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-              }
-              p {
-                margin: 5px;
-              }
-              h1 {
-                text-align: center;
-              }
-            </style>
-          </head>
-          <body>
-            ${printableArea.innerHTML}
-          </body>
-        </html>
+      <html>
+        <head>
+          <title>Proforma</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            img {
+              border: black 1px solid;
+              border-radius: 5px;
+              margin-left: 80px;
+              height: 70px;
+              width: 70px;
+            }
+            P {
+              margin: 0px;
+            }
+            table {
+              margin-top: 10px;
+              margin-bottom: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="http://3.143.220.6/ferreteria-logo.png" width="70px" height="70px">
+          ${printableArea.innerHTML}
+        </body>
+      </html>
       `);
       printWindow.document.close();
       printWindow.print();

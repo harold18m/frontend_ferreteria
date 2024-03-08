@@ -46,25 +46,31 @@
               :importeTotal="proforma.importe_total" 
             />
             <div id="printableArea" class="hidden">
-                <h4>FERRETERIA VIRGEN DE GUADALUPE</h4>
-                <p>Telf: 975 495 081 / 943 367 808</p>
-                <p>Proforma: #{{ numeroProforma }}</p>
+                <h4 style="text-align: center;">FERRETERIA VIRGEN DE GUADALUPE</h4>
+                <p style="text-align: center;">Telf: 975 495 081 / 943 367 808</p>
+                <p style="text-align: center;">Proforma       #{{ numeroProforma }}</p>
                 <p>Fecha: {{ formatDate(fecha) }} {{ formatTime(hora) }}</p>
-                <p>Cliente: {{ cliente }}</p>
-                <p>Dirección: {{ direccion }}</p>
+                <div class="container">
+                  <div class="sub-container">
+                    <p class="text">Cliente: {{ cliente }} </p>
+                  </div>
+                  <div class="sub-container">
+                    <p class="text">Direccion: {{ direccion }} </p>
+                  </div>
+                </div>
                 <table>
                   <thead>
                     <tr>
-                      <th style="margin: 0px 0px;">Descripcion</th>
                       <th>Cant</th>
+                      <th>Descripcion</th>
                       <th>P. Unit</th>
-                      <th>Importe</th>
+                      <th style="text-align: end;">Importe</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in itemsProforma" :key="index">
-                      <td>{{ item.descripcion }}</td>
                       <td>{{ item.cantidad }}</td>
+                      <td>{{ item.descripcion }}</td>
                       <td>S/{{ item.precio_unitario }}</td>
                       <td style="text-align: end;">S/{{ item.importe }}</td>
                     </tr>
@@ -73,12 +79,15 @@
                     </tr>
                     <tr style="margin-top: 10px; border-top: 1px solid black;">
                       <td colspan="3">Total a pagar: </td>
-                      <td>S/{{ importeTotal }}</td>
+                      <td style="text-align: end;">S/{{ importeTotal }}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="4"><hr></td>
                     </tr>
                   </tbody>
                 </table>
-                <p style="font-size: 15px;">GRACIAS POR SU PREFERENCIA !!</p>
-                <p style="font-size: 0.8em; margin-left: 60px;">No hay devoluciones</p>
+                <p style="font-size: 15px; text-align: center;">GRACIAS POR SU PREFERENCIA !!</p>
+                <p style="font-size: 0.8em; text-align: center;">No hay devoluciones</p>
               </div>
             <button @click="imprimirProforma(proforma.id)"><img class="print" src="@/assets/print.svg"></button>
           </td>
@@ -123,12 +132,7 @@ export default {
 
   methods: {
     imprimirProforma(proformaId) {
-      // Crear la imagen y asignar la URL
-      const img = new Image();
-      img.src = 'http://3.143.220.6/ferreteria-logo.png';
 
-      // Manejar la carga de la imagen
-      img.onload = () => {
         api.get(`api/imprimir-proforma/${proformaId}/`, {
           headers: {
             'Content-Type': 'application/json',
@@ -159,15 +163,24 @@ export default {
                 <head>
                   <title>Proforma</title>
                   <style>
+                    @media print {
+                      @page {
+                        size: 21cm 29.7cm;
+                        margin: 0;
+                      }
+                    }
                     body {
                       font-family: Arial, sans-serif;
                     }
                     img {
                       border: black 1px solid;
                       border-radius: 5px;
-                      margin-left: 80px;
+                      text-align: center;
                       height: 70px;
                       width: 70px;
+                    }
+                    #printableArea {
+                      margin-left: 80px;
                     }
                     P {
                       margin: 0px;
@@ -176,10 +189,19 @@ export default {
                       margin-top: 10px;
                       margin-bottom: 10px;
                     }
+                    .container {
+                      display: flex;
+                      justify-content: space-between;
+                    }
+                    .sub-container {
+                      width: 50%;
+                    }
+                    .text {
+                      text-align: left;
+                    }
                   </style>
                 </head>
                 <body>
-                  <img src="${img.src}" width="70px" height="70px">
                   ${printableArea.innerHTML}
                 </body>
               </html>
@@ -192,10 +214,6 @@ export default {
         .catch(error => {
           console.error(error);
         });
-      };
-      img.onerror = (error) => {
-        console.error('Error al cargar la imagen:', error);
-      };
     },
       // Método para recuperar proformas
       fetchProformas(url = 'api/historial-proformas/') {

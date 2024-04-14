@@ -5,7 +5,7 @@
         <table class="w-full table-auto">
           <thead>
               <tr>
-                <th class="table-header-1 cantidad"> <div class="">Cliente</div></th>
+                <th class="table-header-1 cantidad"><div class="">Cliente</div></th>
                 <th class="table-header-1 descripcion"><div class="">Dirección</div></th>
                 <th class="table-header-1 punit"></th>
                 <th class="table-header-1 importe"></th>
@@ -108,9 +108,10 @@ import api from '../api';
     data() {
       return {
         numeroProforma: '#########',
-        cliente: '',
         direccion: '',
         mensaje: '',
+        cliente: localStorage.getItem('cliente') || '',
+        direccion: localStorage.getItem('direccion') || '',
         proformaItems: [
           { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
           { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
@@ -124,10 +125,17 @@ import api from '../api';
     },
     watch: {
       proformaItems: {
-        handler() {
+        handler(newValue) {
           this.recalcularImporteTotal();
+          localStorage.setItem('proformaItems', JSON.stringify(newValue));
         },
         deep: true
+      },
+      cliente(newCliente) {
+        localStorage.setItem('cliente', newCliente);
+      },
+      direccion(newDireccion) {
+        localStorage.setItem('direccion', newDireccion);
       }
     },
     computed: {
@@ -156,9 +164,11 @@ import api from '../api';
       agregarFila() {
         this.proformaItems.push({ cantidad: null, descripcion: '', punit: null, importe: 0.00 });
         this.recalcularImporteTotal();
+        this.$forceUpdate();
       },
       eliminarFila(index) {
         this.proformaItems.splice(index, 1);
+        this.$forceUpdate();
       },
       recalcularImporteTotal() {
       try {
@@ -239,7 +249,6 @@ import api from '../api';
       printWindow.close();
     },
       submitForm() {
-        this.datosGuardados = true;
         const dataToSend = {
           direccion: this.direccion,
           cliente: this.cliente,
@@ -260,6 +269,7 @@ import api from '../api';
               response.data.message,
               'success'
             );
+            this.datosGuardados = true;
             this.numeroProforma = response.data.numero_proforma;
           })
           .catch(error => {
@@ -277,6 +287,12 @@ import api from '../api';
               )
             }
           });
+      }
+    },
+    mounted() {
+      const proformaItems = localStorage.getItem('proformaItems');
+      if (proformaItems) {
+        this.proformaItems = JSON.parse(proformaItems);
       }
     }
   };

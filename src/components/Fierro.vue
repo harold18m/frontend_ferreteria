@@ -90,11 +90,22 @@ export default {
       return precioVenta - precioCompra;
     },
     fetchExchangeRate() {
-      api.get('api/tipo-de-cambio/')
-        .then(response => {
-          this.usdToPenExchangeRate = response.data.tipo_de_cambio;
-        })
-        .catch(error => console.error('Error al obtener la tasa de cambio:', error));
+      const lastFetch = localStorage.getItem('lastFetch');
+      const now = new Date();
+
+      if (lastFetch && now - new Date(lastFetch) < 5 * 60 * 60 * 1000) {
+        // Menos de 5 horas desde la última llamada a la API, usar la tasa de cambio almacenada en localStorage
+        this.usdToPenExchangeRate = localStorage.getItem('usdToPenExchangeRate');
+      } else {
+        // Más de 5 horas desde la última llamada a la API, llamar a la API de nuevo
+        api.get('api/tipo-de-cambio/')
+          .then(response => {
+            this.usdToPenExchangeRate = response.data.tipo_de_cambio;
+            localStorage.setItem('usdToPenExchangeRate', this.usdToPenExchangeRate);
+            localStorage.setItem('lastFetch', now.toString());
+          })
+          .catch(error => console.error('Error al obtener la tasa de cambio:', error));
+      }
     },
   },
 };

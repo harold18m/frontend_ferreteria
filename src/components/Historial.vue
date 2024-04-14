@@ -14,7 +14,6 @@
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Dirección</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Fecha</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Hora</th>
-          <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Completado?</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Importe Total</th>
           <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Acciones</th>
         </tr>
@@ -26,10 +25,7 @@
           <td class="px-6 py-4 whitespace-nowrap">{{ proforma.direccion }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(proforma.fecha) }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatTime(proforma.hora) }}</td>
-          <td class="px-6 py-4 whitespace-nowrap flex justify-center items-center">
-            <i v-if="proforma.completed" class="fas fa-check text-green-500 my-2" @click="confirmCompletion(proforma)"></i>
-            <i v-else class="fas fa-times text-red-500 my-2" @click="confirmCompletion(proforma)"></i>
-          </td>
+        
           <td class="px-6 py-4 whitespace-nowrap">S/. {{ proforma.importe_total }}</td>
           <td class="px-6 py-4 whitespace-nowrap">
             <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(proforma.id)"><img class="visibility" src="@/assets/visibility.svg"></button>
@@ -175,7 +171,8 @@ export default {
                     img {
                       border: black 1px solid;
                       border-radius: 5px;
-                      text-align: center;
+                      display: flex;
+                      justify-content: center;
                       height: 70px;
                       width: 70px;
                     }

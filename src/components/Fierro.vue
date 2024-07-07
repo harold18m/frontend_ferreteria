@@ -93,7 +93,7 @@ export default {
       const lastFetch = localStorage.getItem('lastFetch');
       const now = new Date();
 
-      if (lastFetch && now - new Date(lastFetch) < 5 * 60 * 60 * 1000) {
+      if (lastFetch && now - new Date(lastFetch) < 1 * 60 * 60 * 1000) {
         // Menos de 5 horas desde la última llamada a la API, usar la tasa de cambio almacenada en localStorage
         this.usdToPenExchangeRate = localStorage.getItem('usdToPenExchangeRate');
       } else {
@@ -101,6 +101,7 @@ export default {
         api.get('api/tipo-de-cambio/')
           .then(response => {
             this.usdToPenExchangeRate = response.data.tipo_de_cambio;
+            this.usdToPenExchangeRate = Math.round(this.usdToPenExchangeRate * 100) / 100;
             localStorage.setItem('usdToPenExchangeRate', this.usdToPenExchangeRate);
             localStorage.setItem('lastFetch', now.toString());
           })

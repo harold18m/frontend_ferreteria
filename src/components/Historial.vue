@@ -25,7 +25,6 @@
           <td class="px-6 py-4 whitespace-nowrap">{{ proforma.direccion }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatDate(proforma.fecha) }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatTime(proforma.hora) }}</td>
-        
           <td class="px-6 py-4 whitespace-nowrap">S/. {{ proforma.importe_total }}</td>
           <td class="px-6 py-4 whitespace-nowrap">
             <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(proforma.id)"><img class="visibility" src="@/assets/visibility.svg"></button>
@@ -290,10 +289,12 @@ img {
 }
 .visibility {
   background-color: #2f80ed;
+  color: #000;
 }
 .visibility:hover {
   background-color: #0c3f81;
 }
+
 
 .print {
   background-color: #749e0c;

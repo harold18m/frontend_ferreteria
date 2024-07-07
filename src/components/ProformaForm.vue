@@ -1,21 +1,22 @@
 <template>
     <div id="app" class="container mx-auto p-6">
       <h1 class="text-4xl text-center font-bold mb-6">Generador de Proformas 🧑‍💻</h1>
+      
       <form @submit.prevent="submitForm" class="w-full">
         <table class="w-full table-auto">
           <thead>
               <tr>
                 <th class="table-header-1 cantidad"><div class="">Cliente</div></th>
                 <th class="table-header-1 descripcion"><div class="">Dirección</div></th>
-                <th class="table-header-1 punit"></th>
+                <th class="table-header-1 precio_unitario"></th>
                 <th class="table-header-1 importe"></th>
                 <th class="table-header-1"></th>
               </tr>
             </thead>
           <tbody>
             <tr>
-              <td><input type="text" placeholder="Ingrese el nombre del cliente" v-model="cliente" id="cliente" name="cliente" class="input-field"></td>
-              <td><input type="text" placeholder="Ingrese la dirección del cliente" v-model="direccion" id="direccion" name="direccion" class="input-field"></td>
+              <td><input type="text" placeholder="Ingrese el nombre del cliente" v-model="cliente" :class="{'input-con-valor': cliente}" id="cliente" name="cliente" class="input-field"></td>
+              <td><input type="text" placeholder="Ingrese la dirección del cliente" v-model="direccion" :class="{'input-con-valor': direccion}" id="direccion" name="direccion" class="input-field"></td>
               <td colspan="2"></td>
               <td><button @click.prevent="nuevoFormulario" class="action-btn">Nueva proforma</button></td>
             </tr>
@@ -26,18 +27,27 @@
               <tr>
                 <th class="table-header-1 cantidad"><div class="theader">Cantidad (Unidades)</div></th>
                 <th class="table-header-1 descripcion"><div class="theader">Descripción</div></th>
-                <th class="table-header-1 punit"><div class="theader">P. Unit  (S/)</div></th>
+                <th class="table-header-1 precio_unitario"><div class="theader">P. Unit  (S/)</div></th>
                 <th class="table-header-1 importe"><div class="theader">Importe</div></th>
-                <th class="table-header-1 acciones"><div class="theader">Acciones</div></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in proformaItems" :key="index">
-                <td><input type="number" placeholder="#" v-model="item.cantidad" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
-                <td><input type="text" placeholder="Nombre del producto" v-model="item.descripcion" name="descripcion" class="input-field" @keydown.enter.prevent></td>
-                <td><input type="number" placeholder="$" v-model="item.punit" name="punit" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent></td>
-                <td><input type="text" :value="calcularImporte(item)"  name="importe" class="input-field" readonly @keydown.enter.prevent></td>
-                <td><button @click.prevent="eliminarFila(index)" class="delete-btn" style="margin-left: 12%;">Eliminar</button></td>
+                <td>
+                  <input type="number" placeholder="#" v-model="item.cantidad" :class="{'input-con-valor': item.cantidad}" name="cantidad" min="0" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent>
+                </td>
+                <td>
+                  <input type="text" placeholder="Nombre del producto" v-model="item.descripcion" :class="{'input-con-valor': item.descripcion}" name="descripcion" class="input-field" @keydown.enter.prevent>
+                </td>
+                <td>
+                  <input type="number" placeholder="$" v-model="item.precio_unitario" :class="{'input-con-valor': item.precio_unitario}" name="precio_unitario" min="0" step="0.01" class="input-field" @input="calcularImporte(item)" @keydown.enter.prevent>
+                </td>
+                <td>
+                  <input type="text" :value="calcularImporte(item)" name="importe" class="input-field" readonly @keydown.enter.prevent>
+                </td>
+                <td>
+                  <button @click.prevent="eliminarFila(index)" class="delete-btn"><i class="fa fa-trash"></i> Eliminar </button>
+                </td>
               </tr>
               <tr>
                 <td colspan="2"></td>
@@ -78,8 +88,8 @@
                   <tr v-for="(item, index) in filteredProformaItems" :key="index">
                     <td>{{ item.cantidad }}</td>
                     <td>{{ item.descripcion }}</td>
-                    <td>S/{{ item.punit }}</td>
-                    <td style="text-align: end;" >S/{{ item.cantidad * item.punit }}</td>
+                    <td>S/{{ item.precio_unitario }}</td>
+                    <td style="text-align: end;" >S/{{ item.cantidad * item.precio_unitario }}</td>
                   </tr>
                   <tr>
                     <td colspan="4"><hr></td>
@@ -113,11 +123,11 @@ import api from '../api';
         cliente: localStorage.getItem('cliente') || '',
         direccion: localStorage.getItem('direccion') || '',
         proformaItems: [
-          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-          { cantidad: null, descripcion: '', punit: null, importe: 0.00 }
+          { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+          { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 }
         ],
         importeTotal: "0.00",
         datosGuardados: false
@@ -140,29 +150,29 @@ import api from '../api';
     },
     computed: {
       filteredProformaItems() {
-      return this.proformaItems.filter(item => item.punit !== null && item.cantidad !== null);
+      return this.proformaItems.filter(item => item.precio_unitario !== null && item.cantidad !== null);
     },
     },
     methods: {
       calcularImporte(item) {
-      return (item.cantidad * item.punit).toFixed(2);
+      return (item.cantidad * item.precio_unitario).toFixed(2);
       },
       nuevoFormulario() {
           this.direccion = '';
           this.cliente = '';
           this.mensaje = '';
           this.proformaItems = [
-            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: null, descripcion: '', punit: null, importe: 0.00 },
-            { cantidad: null, descripcion: '', punit: null, importe: 0.00 }
+            { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 },
+            { cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 }
           ];
           this.importeTotal = 0.00;
           this.datosGuardados = false;
         },
       agregarFila() {
-        this.proformaItems.push({ cantidad: null, descripcion: '', punit: null, importe: 0.00 });
+        this.proformaItems.push({ cantidad: null, descripcion: '', precio_unitario: null, importe: 0.00 });
         this.recalcularImporteTotal();
         this.$forceUpdate();
       },
@@ -173,7 +183,7 @@ import api from '../api';
       recalcularImporteTotal() {
       try {
         this.importeTotal = this.proformaItems.reduce((total, item) => {
-          const importe = item.cantidad * item.punit;
+          const importe = item.cantidad * item.precio_unitario;
           return total + importe;
         }, 0).toFixed(2);
       } catch (error) {
@@ -247,18 +257,19 @@ import api from '../api';
       printWindow.document.close();
       printWindow.print();
       printWindow.close();
+      this.nuevoFormulario();
     },
       submitForm() {
         const dataToSend = {
           direccion: this.direccion,
           cliente: this.cliente,
           proformaItems: this.proformaItems
-            .filter(item => item.cantidad * (item.punit || 0) !== 0)
+            .filter(item => item.cantidad * (item.precio_unitario || 0) !== 0)
             .map(item => ({
               cantidad: item.cantidad,
               descripcion: item.descripcion,
-              punit: item.punit,
-              importe: item.cantidad * (item.punit || 0)
+              precio_unitario: item.precio_unitario,
+              importe: item.cantidad * (item.precio_unitario || 0)
             })),
           importeTotal: this.importeTotal
         };
@@ -299,6 +310,12 @@ import api from '../api';
   </script>
 
   <style scoped>
+
+  .input-con-valor {
+    background-color: #d4d3d3; 
+    color: black;
+  }
+
   .hidden {
     display: none;
   }
@@ -340,7 +357,7 @@ import api from '../api';
   width: 40%; /* Ajusta este valor según tus necesidades */
 }
 
-.table-header-1.punit {
+.table-header-1.precio_unitario {
   width: 15%; /* Ajusta este valor según tus necesidades */
 }
 
@@ -386,6 +403,7 @@ import api from '../api';
   border: black 1px solid;
   border-radius: 4px;
   cursor: pointer;
+  margin: 0 16px;
 }
 .action-btn.add {
   background-color: #5cb800;

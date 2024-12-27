@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://cloud.marketingdigital.org.pe/',
+    baseURL: 'http://148.113.174.2/',
 });
 
 export default api;

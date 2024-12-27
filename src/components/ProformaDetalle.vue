@@ -93,7 +93,7 @@
 
 <script>
 import api from '../api';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import Swal from 'sweetalert2';
 
 export default {

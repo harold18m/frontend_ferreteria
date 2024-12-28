@@ -9,7 +9,7 @@ export default {
     const username = ref('');
     const password = ref('');
     const error = ref(null);
-    const router = useRouter(); // Usar useRouter
+    const router = useRouter();
 
     const login = async () => {
       try {
@@ -17,14 +17,11 @@ export default {
           username: username.value,
           password: password.value
         });
-        console.log('Response:', response); // Agregar este log
         if (response.status === 200) {
-          console.log('Token:', response.data.token); // Agregar este log
           localStorage.setItem('token', response.data.token);
-          router.push('/'); // Usar router.push en lugar de this.$router.push
+          router.push('/');
         }
       } catch (error) {
-        console.error('Error:', error); // Agregar este log
         const errorMessage = error.response && error.response.data && error.response.data.detail
           ? error.response.data.detail
           : 'Usuario o contraseña incorrectos';

@@ -1,11 +1,9 @@
 <script setup>
-import Historial from '@/components/Historial.vue';
-
+import Historial from '@/components/Historial.vue'
 </script>
 
 <template>
   <main>
-    <Historial/>
+    <Historial />
   </main>
 </template>
-

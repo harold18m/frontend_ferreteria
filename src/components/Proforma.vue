@@ -1,6 +1,6 @@
 <!-- Proforma.vue -->
 <script setup>
-import ProformaForm from './ProformaForm.vue'; 
+import ProformaForm from './ProformaForm.vue'
 </script>
 
 <template>
@@ -8,5 +8,3 @@ import ProformaForm from './ProformaForm.vue';
     <proforma-form></proforma-form>
   </div>
 </template>
-
-

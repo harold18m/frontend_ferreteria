@@ -1,10 +1,7 @@
 <template>
-  <div id="app" class="container mx-auto p-6">
-    <h1 class="text-4xl text-center font-bold mb-6">
-      Generador de Proformas 🧑‍💻
-    </h1>
-
-    <form @submit.prevent="submitForm" class="w-full">
+  <div class="mx-auto">
+    <h1 class="text-4xl text-center font-bold mb-6 text-gray-800 dark:text-gray-200">Generador de Proformas 🧑‍💻</h1>
+    <form @submit.prevent="submitForm" class="w-full text-gray-800 dark:text-gray-200">
       <table class="w-full table-auto">
         <thead>
           <tr>
@@ -43,9 +40,7 @@
             </td>
             <td colspan="2"></td>
             <td>
-              <button @click.prevent="nuevoFormulario" class="action-btn">
-                Nueva proforma
-              </button>
+              <button @click.prevent="nuevoFormulario" class="action-btn">Nueva proforma</button>
             </td>
           </tr>
         </tbody>
@@ -54,7 +49,7 @@
         <thead>
           <tr>
             <th class="table-header-1 cantidad">
-              <div class="theader">Cantidad (Unidades)</div>
+              <div class="theader">Cantidad</div>
             </th>
             <th class="table-header-1 descripcion">
               <div class="theader">Descripción</div>
@@ -127,30 +122,17 @@
             <td colspan="2"></td>
             <td class="font-bold text-right pr-2">Importe Total:</td>
             <td>
-              <input
-                type="text"
-                :value="importeTotal"
-                class="input-field"
-                readonly
-              />
+              <input type="text" :value="importeTotal" class="input-field" readonly />
             </td>
             <td></td>
           </tr>
         </tbody>
       </table>
       <div class="button-container">
-        <button @click.prevent="agregarFila" class="action-btn add">
-          Agregar Fila
-        </button>
+        <button @click.prevent="agregarFila" class="action-btn add">Agregar Fila</button>
         <input type="submit" value="Guardar" class="action-btn right" />
         <div v-if="datosGuardados">
-          <button
-            type="button"
-            @click="imprimirProforma"
-            class="action-btn right"
-          >
-            Imprimir
-          </button>
+          <button type="button" @click="imprimirProforma" class="action-btn right">Imprimir</button>
           <div id="printableArea" class="hidden">
             <h4 style="text-align: center">FERRETERIA VIRGEN DE GUADALUPE</h4>
             <p style="text-align: center">Telf: 975 495 081 / 943 367 808</p>
@@ -181,9 +163,7 @@
                   <td>{{ item.cantidad }}</td>
                   <td>{{ item.descripcion }}</td>
                   <td>S/{{ item.precio_unitario }}</td>
-                  <td style="text-align: end">
-                    S/{{ item.cantidad * item.precio_unitario }}
-                  </td>
+                  <td style="text-align: end">S/{{ item.cantidad * item.precio_unitario }}</td>
                 </tr>
                 <tr>
                   <td colspan="4"><hr /></td>
@@ -194,12 +174,8 @@
                 </tr>
               </tbody>
             </table>
-            <p style="font-size: 15px; text-align: center">
-              GRACIAS POR SU PREFERENCIA !!
-            </p>
-            <p style="font-size: 0.8em; text-align: center">
-              No hay devoluciones
-            </p>
+            <p style="font-size: 15px; text-align: center">GRACIAS POR SU PREFERENCIA !!</p>
+            <p style="font-size: 0.8em; text-align: center">No hay devoluciones</p>
           </div>
         </div>
       </div>
@@ -273,7 +249,7 @@ export default {
   computed: {
     filteredProformaItems() {
       return this.proformaItems.filter(
-        (item) => item.precio_unitario !== null && item.cantidad !== null
+        (item) => item.precio_unitario !== null && item.cantidad !== null,
       )
     },
   },
@@ -367,7 +343,7 @@ export default {
       const printWindow = window.open(
         '',
         '_blank',
-        `width=${anchoVentana},height=${altoVentana},left=${posicionX},top=${posicionY}`
+        `width=${anchoVentana},height=${altoVentana},left=${posicionX},top=${posicionY}`,
       )
       printWindow.document.open()
       printWindow.document.write(`
@@ -485,6 +461,7 @@ export default {
   padding: 8px;
   border-radius: 4px;
   margin-bottom: 8px;
+  background: white;
 }
 
 .table-auto {

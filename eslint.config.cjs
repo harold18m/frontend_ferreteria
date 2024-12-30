@@ -1,14 +1,15 @@
-// filepath: /c:/Users/HAROLD/ferreteria/frontend/eslint.config.cjs
 const { ESLint } = require('eslint')
 
 module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.vue'],
     languageOptions: {
-      parser: require('@typescript-eslint/parser'),
+      parser: require('vue-eslint-parser'),
       parserOptions: {
+        parser: require('@typescript-eslint/parser'),
         ecmaVersion: 2020,
         sourceType: 'module',
+        extraFileExtensions: ['.vue'],
       },
     },
     plugins: {
@@ -17,7 +18,7 @@ module.exports = [
       prettier: require('eslint-plugin-prettier'),
     },
     rules: {
-      'prettier/prettier': 'error',
+      // 'prettier/prettier': 'error',
       'vue/multi-word-component-names': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

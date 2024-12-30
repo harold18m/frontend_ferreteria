@@ -1,11 +1,11 @@
 <template>
-  <div id="app" class="container mx-auto p-6">
+  <div class="container mx-auto p-6 text-gray-800 dark:text-gray-400">
     <h1 class="text-4xl text-center font-bold mb-4">Historial de Proformas</h1>
     <div class="flex flex-col md:flex-row mb-4">
       <input
         v-model="searchTerm"
         placeholder="Buscar proformas"
-        class="p-2 border border-gray-300 rounded-l-md md:rounded-r-none"
+        class="p-2 border bg-gray-100 border-gray-300 rounded-l-md md:rounded-r-none"
         @keyup.enter="searchProformas"
       />
       <button
@@ -20,38 +20,18 @@
       <table class="min-w-full divide-y border-2 divide-gray-200">
         <thead class="bg-gray-200">
           <tr>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              # Numero Proforma
-            </th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              Cliente
-            </th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              Dirección
-            </th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              Fecha
-            </th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              Hora
-            </th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              Importe Total
-            </th>
-            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">
-              Acciones
-            </th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider"># Numero Proforma</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Cliente</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Dirección</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Fecha</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Hora</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Importe Total</th>
+            <th class="px-6 py-3 text-left text-xs uppercase tracking-wider">Acciones</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr
-            v-for="proforma in proformas"
-            :key="proforma.id"
-            :id="'proforma-' + proforma.id"
-          >
-            <td class="px-6 py-4 whitespace-nowrap">
-              #{{ proforma.numero_proforma }}
-            </td>
+          <tr v-for="proforma in proformas" :key="proforma.id" :id="'proforma-' + proforma.id">
+            <td class="px-6 py-4 whitespace-nowrap">#{{ proforma.numero_proforma }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ proforma.cliente }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
               {{ proforma.direccion }}
@@ -62,15 +42,13 @@
             <td class="px-6 py-4 whitespace-nowrap">
               {{ formatTime(proforma.hora) }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              S/. {{ proforma.importe_total }}
-            </td>
+            <td class="px-6 py-4 whitespace-nowrap">S/. {{ proforma.importe_total }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button
                 class="text-green-500 hover:text-green-800 mx-1"
                 @click="verProforma(proforma.id)"
               >
-                <img class="visibility" src="@/assets/visibility.svg" />
+                <img class="visibility" src="@/assets/svgs/visibility.svg" />
               </button>
               <ProformaDetalle
                 ref="proformaDetalle"
@@ -85,12 +63,8 @@
                 :importeTotal="proforma.importe_total"
               />
               <div id="printableArea" class="hidden">
-                <h4 style="text-align: center">
-                  FERRETERIA VIRGEN DE GUADALUPE
-                </h4>
-                <p style="text-align: center">
-                  Telf: 975 495 081 / 943 367 808
-                </p>
+                <h4 style="text-align: center">FERRETERIA VIRGEN DE GUADALUPE</h4>
+                <p style="text-align: center">Telf: 975 495 081 / 943 367 808</p>
                 <p style="text-align: center">Proforma #{{ numeroProforma }}</p>
                 <p>Fecha: {{ formatDate(fecha) }} {{ formatTime(hora) }}</p>
                 <div class="container">
@@ -129,15 +103,11 @@
                     </tr>
                   </tbody>
                 </table>
-                <p style="font-size: 15px; text-align: center">
-                  GRACIAS POR SU PREFERENCIA !!
-                </p>
-                <p style="font-size: 0.8em; text-align: center">
-                  No hay devoluciones
-                </p>
+                <p style="font-size: 15px; text-align: center">GRACIAS POR SU PREFERENCIA !!</p>
+                <p style="font-size: 0.8em; text-align: center">No hay devoluciones</p>
               </div>
               <button @click="imprimirProforma(proforma.id)">
-                <img class="print" src="@/assets/print.svg" />
+                <img class="print" src="@/assets/svgs/print.svg" />
               </button>
             </td>
           </tr>
@@ -219,7 +189,7 @@ export default {
             const printWindow = window.open(
               '',
               '_blank',
-              `width=${anchoVentana},height=${altoVentana},left=${posicionX},top=${posicionY}`
+              `width=${anchoVentana},height=${altoVentana},left=${posicionX},top=${posicionY}`,
             )
             printWindow.document.open()
             printWindow.document.write(`

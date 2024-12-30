@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md mx-auto mt-8 p-4">
+  <div class="max-w-md mx-auto mt-8 p-4 text-gray-800 dark:text-gray-200">
     <h1 class="text-3xl font-bold mb-4">Lista de Pedidos</h1>
     <ul v-if="tasks.length > 0">
       <li v-for="task in tasks" :key="task.id" class="flex items-center mb-2">
@@ -15,11 +15,8 @@
         <span class="{ 'line-through text-gray-600 font-bold': task.completed }"
           >⌚Fecha: {{ task.fecha }}</span
         >
-        <button
-          class="text-green-500 hover:text-green-800 mx-1"
-          @click="verProforma(task.id)"
-        >
-          <img class="visibility" src="@/assets/visibility.svg" />
+        <button class="text-green-500 hover:text-green-800 mx-1" @click="verProforma(task.id)">
+          <img class="visibility" src="@/assets/svgs/visibility.svg" />
         </button>
         <ProformaDetalle
           ref="proformaDetalle"

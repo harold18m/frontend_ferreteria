@@ -5,9 +5,7 @@
     v-if="item_proforma"
     class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center"
   >
-    <div
-      class="bg-white p-4 rounded-md border-2 max-w-2xl w-full overflow-x-auto"
-    >
+    <div class="bg-white p-4 rounded-md border-2 max-w-2xl w-full overflow-x-auto">
       <div class="flex justify-end">
         <button
           @click="$emit('close')"
@@ -74,21 +72,15 @@
                 <td class="text-right px-4">S/{{ importeTotal }}</td>
               </tr>
               <tr>
-                <td class="p-2 text-center" colspan="4">
-                  GRACIAS POR SU PREFERENCIA !
-                </td>
+                <td class="p-2 text-center" colspan="4">GRACIAS POR SU PREFERENCIA !</td>
               </tr>
               <tr>
-                <td class="text-center text-xs" colspan="4">
-                  No hay devoluciones
-                </td>
+                <td class="text-center text-xs" colspan="4">No hay devoluciones</td>
               </tr>
             </tbody>
           </table>
           <div class="text-center mt-2">
-            <p class="text-xs text-white">
-              Esta proforma no tiene validez como factura
-            </p>
+            <p class="text-xs text-white">Esta proforma no tiene validez como factura</p>
           </div>
         </div>
       </div>
@@ -97,14 +89,14 @@
           @click="copiarProforma()"
           class="flex items-center text-black px-2 py-1 rounded border border-gray-800 bg-[#d2e062] hover:bg-[#646b2f]"
         >
-          <img src="@/assets/content_copy.svg" alt="Copiar" />
+          <img src="@/assets/svgs/content_copy.svg" alt="Copiar" />
           <span>Copiar</span>
         </button>
         <button
           @click="editarProforma()"
           class="flex items-center text-black px-2 py-1 rounded border mx-1 border-gray-800 bg-[#f39c12] hover:bg-[#e67e22]"
         >
-          <img src="@/assets/edite.svg" alt="Editar" />
+          <img src="@/assets/svgs/edite.svg" alt="Editar" />
           <a href="/">Editar</a>
         </button>
         <button
@@ -124,15 +116,7 @@ import html2canvas from 'html2canvas-pro'
 import Swal from 'sweetalert2'
 
 export default {
-  props: [
-    'proformaId',
-    'numeroProforma',
-    'fecha',
-    'importeTotal',
-    'hora',
-    'cliente',
-    'direccion',
-  ],
+  props: ['proformaId', 'numeroProforma', 'fecha', 'importeTotal', 'hora', 'cliente', 'direccion'],
   data() {
     return {
       proforma: null,
@@ -161,9 +145,7 @@ export default {
     },
     async fetchProforma() {
       try {
-        const response = await api.get(
-          `api/historial-proformas/${this.proformaId}`
-        )
+        const response = await api.get(`api/historial-proformas/${this.proformaId}`)
         this.item_proforma = response.data
       } catch (error) {
         console.error('Error:', error)
@@ -248,10 +230,7 @@ export default {
                   })
                 })
                 .catch((error) => {
-                  console.error(
-                    'Error al copiar la imagen al portapapeles:',
-                    error
-                  )
+                  console.error('Error al copiar la imagen al portapapeles:', error)
                 })
             })
           })

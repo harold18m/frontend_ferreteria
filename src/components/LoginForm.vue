@@ -1,8 +1,12 @@
 <script>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import api from '../api'
+import Card from 'primevue/card';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Button from 'primevue/button';
 
 export default {
   setup() {
@@ -45,31 +49,23 @@ export default {
 </script>
 
 <template>
-  <section class="bg-gray-50 min-h-screen flex items-center justify-center">
-    <div
-      class="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
-    >
-      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <a
-          href="/login"
-          class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-        >
+  <section class="bg-gray-50 m-4 md:w-1/3 rounded-lg">
+      <div class="p-6 space-y-4 sm:p-8">
+        <RouterLink to="/login">
           <img
             class="w-32 h-32 mx-auto border border-gray-500 rounded"
             src="/ferreteria.jpg"
             alt="logo"
           />
-        </a>
+        </RouterLink>
         <h1
-          class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+          class="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
         >
           Iniciar sesión en su cuenta
         </h1>
         <form class="space-y-4 md:space-y-6" @submit.prevent="login">
           <div>
-            <label
-              for="email"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >Usuario</label
             >
             <input
@@ -102,6 +98,5 @@ export default {
           </button>
         </form>
       </div>
-    </div>
   </section>
 </template>

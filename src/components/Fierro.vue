@@ -1,18 +1,16 @@
 <template>
-  <div class="container mx-auto p-6">
+  <div class="container mx-auto p-6 text-gray-800 dark:text-gray-200  ">
     <h1 class="text-2xl font-bold mb-4">Tasa de Cambio Dólar a Soles</h1>
     <div class="flex flex-col md:flex-row mb-4 my-2">
       <div class="mb-4 md:mb-0 md:mr-4">
-        <label
-          for="usdToPenExchangeRate"
-          class="block text-sm font-medium text-gray-600"
+        <label for="usdToPenExchangeRate" class="block text-sm font-medium text-gray-600"
           >Tasa de cambio $ a PEN:</label
         >
         <input
           id="usdToPenExchangeRate"
           v-model.number="usdToPenExchangeRate"
           type="number"
-          class="mt-1 p-2 border rounded-md w-full md:w-32"
+          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800 md:w-32"
         />
       </div>
       <div class="mb-4 md:mb-0 md:mr-4">
@@ -23,7 +21,7 @@
           name="pcompra"
           v-model.number="pcompra"
           type="number"
-          class="mt-1 p-2 border rounded-md w-full md:w-32"
+          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800  md:w-32"
         />
       </div>
       <div class="mb-4 md:mb-0">
@@ -34,7 +32,7 @@
           name="pventa"
           v-model.number="pventa"
           type="number"
-          class="mt-1 p-2 border rounded-md w-full md:w-32"
+          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800 md:w-32"
         />
       </div>
     </div>
@@ -72,10 +70,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="cantidadxtonelada in cantidadxtoneladas"
-              :key="cantidadxtonelada"
-            >
+            <tr v-for="cantidadxtonelada in cantidadxtoneladas" :key="cantidadxtonelada">
               <td class="py-2 px-4 border-b text-center">
                 {{ cantidadxtonelada }}
               </td>
@@ -136,17 +131,11 @@ export default {
           .get('api/tipo-de-cambio/')
           .then((response) => {
             this.usdToPenExchangeRate = response.data.tipo_de_cambio
-            this.usdToPenExchangeRate =
-              Math.round(this.usdToPenExchangeRate * 100) / 100
-            localStorage.setItem(
-              'usdToPenExchangeRate',
-              this.usdToPenExchangeRate
-            )
+            this.usdToPenExchangeRate = Math.round(this.usdToPenExchangeRate * 100) / 100
+            localStorage.setItem('usdToPenExchangeRate', this.usdToPenExchangeRate)
             localStorage.setItem('lastFetch', now.toString())
           })
-          .catch((error) =>
-            console.error('Error al obtener la tasa de cambio:', error)
-          )
+          .catch((error) => console.error('Error al obtener la tasa de cambio:', error))
       }
     },
   },

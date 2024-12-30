@@ -11,31 +11,31 @@ const routes = [
       {
         path: '',
         name: 'dashboard',
-        component: () => import('@views/pages/DashboardView.vue'),
+        component: () => import('@/views/pages/DashboardView.vue'),
         meta: { title: 'Dashboard' }
       },
       {
         path: 'proformas',
         name: 'proformas',
-        component: () => import('@views/pages/HomeView.vue'),
+        component: () => import('@/views/pages/HomeView.vue'),
         meta: { title: 'Gestión de Proformas' }
       },
       {
         path: '/historial',
         name: 'historial',
-        component: () => import('@views/pages/HistorialView.vue'),
+        component: () => import('@/views/pages/HistorialView.vue'),
         meta: { title: 'Historial de Operaciones' }
       },
       {
         path: '/precio-fierro',
         name: 'precio-fierro',
-        component: () => import('@views/pages/PrecioFierroView.vue'),
+        component: () => import('@/views/pages/PrecioFierroView.vue'),
         meta: { title: 'Precio del Fierro' }
       },
       {
         path: '/lista',
         name: 'lista',
-        component: () => import('@views/pages/ListaTareasView.vue'),
+        component: () => import('@/views/pages/ListaTareasView.vue'),
         meta: { title: 'Lista de Pendientes' }
       },
     ]
@@ -43,12 +43,12 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@views/pages/LoginView.vue'),
+    component: () => import('@/views/pages/LoginView.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
-    component: () => import('@views/pages/NotFoundView.vue'),
+    component: () => import('@/views/pages/NotFoundView.vue'),
   },
 ]
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDashboardData } from '@/composables/useDashboardData';
-import WelcomeSection from '@/components/dashboard/WelcomeSection.vue';
+import WelcomeSection from '@/components/Dashboard/WelcomeSection.vue';
 
 const {
   companyInfo,

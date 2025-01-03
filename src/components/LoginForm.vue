@@ -3,10 +3,6 @@ import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import api from '../api'
-import Card from 'primevue/card';
-import InputText from 'primevue/inputtext';
-import Password from 'primevue/password';
-import Button from 'primevue/button';
 
 export default {
   setup() {
@@ -50,53 +46,30 @@ export default {
 
 <template>
   <section class="bg-gray-50 m-4 md:w-1/3 rounded-lg">
-      <div class="p-6 space-y-4 sm:p-8">
-        <RouterLink to="/login">
-          <img
-            class="w-32 h-32 mx-auto border border-gray-500 rounded"
-            src="/ferreteria.jpg"
-            alt="logo"
-          />
-        </RouterLink>
-        <h1
-          class="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
-        >
-          Iniciar sesión en su cuenta
-        </h1>
-        <form class="space-y-4 md:space-y-6" @submit.prevent="login">
-          <div>
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Usuario</label
-            >
-            <input
-              type="text"
-              v-model="username"
-              id="email"
-              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="@usuario"
-            />
-          </div>
-          <div>
-            <label
-              for="password"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Contraseña</label
-            >
-            <input
-              type="password"
-              v-model="password"
-              id="password"
-              placeholder="••••••••••••••"
-              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-          </div>
-          <button
-            type="submit"
-            class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-300 ease-in-out transform hover:scale-105"
-          >
-            Ingresar
-          </button>
-        </form>
-      </div>
+    <div class="p-6 space-y-4 sm:p-8">
+      <RouterLink to="/login">
+        <img class="w-32 h-32 mx-auto border border-gray-500 rounded" src="/ferreteria.jpg" alt="logo" />
+      </RouterLink>
+      <h1 class="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        Iniciar sesión en su cuenta
+      </h1>
+      <form class="space-y-4 md:space-y-6" @submit.prevent="login">
+        <div>
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
+          <input type="text" v-model="username" id="email"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="@usuario" />
+        </div>
+        <div>
+          <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
+          <input type="password" v-model="password" id="password" placeholder="••••••••••••••"
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+        </div>
+        <button type="submit"
+          class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition duration-300 ease-in-out transform hover:scale-105">
+          Ingresar
+        </button>
+      </form>
+    </div>
   </section>
 </template>

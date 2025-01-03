@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from 'vue-router';
+import { useSidebarStore } from '@/stores/sidebarStore';
 import AppMenu from './AppMenu.vue'
 
 const router = useRouter();
+const sidebarStore = useSidebarStore();
+
 const cerrarSesion = () => {
   localStorage.removeItem('token');
   router.push('/login');
+}
+
+const close = () => {
+  sidebarStore.toggleSidebar();
 }
 </script>
 
@@ -27,6 +34,9 @@ const cerrarSesion = () => {
           <span class="font-medium">John Doe</span>
           <span class="text-sm text-gray-400">Administrador</span>
         </div>
+        <button @click="close()" class="ml-auto focus:outline-none">
+          <i class="pi pi-times"></i>
+        </button>
       </div>
     </div>
 

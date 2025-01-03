@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import type { CompanyInfo } from '@/types/dashboard';
-import Image from 'primevue/image';
-
 defineProps<{
   companyInfo: CompanyInfo;
 }>();
@@ -19,16 +17,8 @@ defineProps<{
             {{ companyInfo.description }}
           </p>
         </div>
-          <Image
-          :src="companyInfo.logo"
-          alt="Logo"
-          width="180"
-          image-class="rounded-lg"
-          preview
-          class="hidden md:block"
-        />
+        <img :src="companyInfo.logo" alt="Logo" width="180" class="rounded-lg hidden md:block" />
       </div>
     </div>
   </div>
 </template>
-

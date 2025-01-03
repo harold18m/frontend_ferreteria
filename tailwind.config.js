@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
       sans: ['Roboto', 'sans-serif'],
@@ -42,12 +39,22 @@ module.exports = {
           500: '#6BB333',
           600: '#5F9D2D',
           700: '#538727',
-        }
-      }
+        },
+        emerald: {
+          DEFAULT: '#34D399',
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          200: '#A7F3D0',
+          300: '#6EE7B7',
+          400: '#34D399', // Color base
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065F46',
+          900: '#064E3B',
+        },
+      },
     },
   },
-  plugins: [
-    require('tailwindcss-primeui'),
-  ],
-  darkMode: "class",
+  darkMode: 'class',
 }

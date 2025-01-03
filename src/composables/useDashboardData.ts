@@ -5,7 +5,7 @@ export function useDashboardData() {
   const companyInfo = ref<CompanyInfo>({
     name: 'Ferretería Virgen de Guadalupe',
     slogan: 'Calidad y servicio en materiales de construcción',
-    logo: '/src/assets/ferreteria-logo.png',
+    logo: '/ferreteria-logo.png',
     welcomeMessage: '¡Bienvenido al Sistema de Gestión!',
     description: 'Accede a todas las herramientas necesarias para gestionar tu negocio de manera eficiente.',
     contactInfo: {

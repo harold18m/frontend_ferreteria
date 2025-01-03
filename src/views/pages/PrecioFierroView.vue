@@ -1,9 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import Fierro from '@/components/Fierro.vue'
 </script>
 
 <template>
-  <main>
-    <Fierro />
-  </main>
+  <Fierro />
 </template>

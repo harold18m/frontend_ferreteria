@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
+import { useSidebarStore } from '@/stores/sidebarStore';
 
 const isDark = inject('isDark', ref(false));
-const isSidebarVisible = inject('isSidebarVisible', ref(true));
+const sidebarStore = useSidebarStore();
 
 const toggleTheme = () => {
   isDark.value = !isDark.value;
   document.documentElement.classList.toggle('dark');
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
-};
-
-const toggleSidebar = () => {
-  isSidebarVisible.value = !isSidebarVisible.value;
 };
 </script>
 
@@ -20,9 +17,9 @@ const toggleSidebar = () => {
                    border-b border-gray-200 dark:border-secondary-600 z-50">
     <div class="h-full px-4 md:px-6 mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3 md:gap-4">
-        <button @click="toggleSidebar" class="p-2 rounded-lg text-secondary-600 dark:text-gray-300
-                               hover:bg-secondary-50 dark:hover:bg-secondary-600
-                               focus:outline-none focus:ring-2 focus:ring-primary-400">
+        <button @click="sidebarStore.toggleSidebar" class="p-2 rounded-lg text-secondary-600 dark:text-gray-300
+                       hover:bg-secondary-50 dark:hover:bg-secondary-600
+                       focus:outline-none focus:ring-2 focus:ring-primary-400">
           <i class="pi pi-bars text-xl"></i>
         </button>
         <RouterLink to="/">

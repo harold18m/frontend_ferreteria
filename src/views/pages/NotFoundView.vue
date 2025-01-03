@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import { defineProps } from 'vue';
 
 // Function to go back in history
 function regresar() {

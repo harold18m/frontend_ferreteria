@@ -1,16 +1,10 @@
 //ProformaDetalle.vue
 <template>
-  <div
-    ref="proformaDetalle"
-    v-if="item_proforma"
-    class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center"
-  >
+  <div ref="proformaDetalle" v-if="item_proforma"
+    class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
     <div class="bg-white p-4 rounded-md border-2 max-w-2xl w-full overflow-x-auto">
       <div class="flex justify-end">
-        <button
-          @click="$emit('close')"
-          class="px-4 py-2 mx-2 bg-red-500 hover:bg-red-700 text-white rounded-md"
-        >
+        <button @click="$emit('close')" class="px-4 py-2 mx-2 bg-red-500 hover:bg-red-700 text-white rounded-md">
           X
         </button>
       </div>
@@ -85,24 +79,18 @@
         </div>
       </div>
       <div class="mt-2 flex space-x-2 justify-center">
-        <button
-          @click="copiarProforma()"
-          class="flex items-center text-black px-2 py-1 rounded border border-gray-800 bg-[#d2e062] hover:bg-[#646b2f]"
-        >
+        <button @click="copiarProforma()"
+          class="flex items-center text-black px-2 py-1 rounded border border-gray-800 bg-[#d2e062] hover:bg-[#646b2f]">
           <img src="@/assets/svgs/content_copy.svg" alt="Copiar" />
           <span>Copiar</span>
         </button>
-        <button
-          @click="editarProforma()"
-          class="flex items-center text-black px-2 py-1 rounded border mx-1 border-gray-800 bg-[#f39c12] hover:bg-[#e67e22]"
-        >
+        <button @click="editarProforma()"
+          class="flex items-center text-black px-2 py-1 rounded border mx-1 border-gray-800 bg-[#f39c12] hover:bg-[#e67e22]">
           <img src="@/assets/svgs/edite.svg" alt="Editar" />
-          <a href="/">Editar</a>
+          <RouterLink to="/proformas">Editar</RouterLink>
         </button>
-        <button
-          @click="$emit('close')"
-          class="px-4 py-2 mx-2 bg-red-700 hover:bg-red-900 text-white rounded border border-gray-800"
-        >
+        <button @click="$emit('close')"
+          class="px-4 py-2 mx-2 bg-red-700 hover:bg-red-900 text-white rounded border border-gray-800">
           X Cerrar
         </button>
       </div>
@@ -114,6 +102,7 @@
 import api from '../api'
 import html2canvas from 'html2canvas-pro'
 import Swal from 'sweetalert2'
+import { RouterLink } from 'vue-router';
 
 export default {
   props: ['proformaId', 'numeroProforma', 'fecha', 'importeTotal', 'hora', 'cliente', 'direccion'],
@@ -297,6 +286,7 @@ export default {
 .edit {
   background-color: #f39c12;
 }
+
 .edit:hover {
   background-color: #e67e22;
 }

@@ -1,22 +1,16 @@
 <script setup lang="ts">
+import { useMenuItems } from '@/composables/menuItems';
 import { ref, computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
 
-const menuItems = [
-  { id: 'dashboard', icon: 'pi pi-th-large', label: 'Dashboard', route: '/' },
-  { id: 'proformas', icon: 'pi pi-file-edit', label: 'Proforma', route: '/proformas' },
-  { id: 'historial', icon: 'pi pi-history', label: 'Historial', route: '/historial' },
-  { id: 'precio-fierro', icon: 'pi pi-dollar', label: 'Precio del Fierro', route: '/precio-fierro' },
-  { id: 'lista', icon: 'pi pi-list', label: 'Lista Pendientes', route: '/lista' },
-  { id: 'reportes', icon: 'pi pi-chart-line', label: 'Reportes', route: '/' },
-];
+const { menuItems } = useMenuItems();
 
 // Computar el item activo basado en la ruta actual
 const activeItem = computed(() => {
-  return menuItems.find(item => route.path === item.route)?.id || 'dashboard';
+  return menuItems.value.find(item => route.path === item.route)?.id || 'dashboard';
 });
 
 const navigate = (item: any) => {

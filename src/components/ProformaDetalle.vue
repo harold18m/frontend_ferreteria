@@ -87,7 +87,7 @@
         <button @click="editarProforma()"
           class="flex items-center text-black px-2 py-1 rounded border mx-1 border-gray-800 bg-[#f39c12] hover:bg-[#e67e22]">
           <img src="@/assets/svgs/edite.svg" alt="Editar" />
-          <RouterLink to="/proformas">Editar</RouterLink>
+          <RouterLink to="proformas">Editar</RouterLink>
         </button>
         <button @click="$emit('close')"
           class="px-4 py-2 mx-2 bg-red-700 hover:bg-red-900 text-white rounded border border-gray-800">

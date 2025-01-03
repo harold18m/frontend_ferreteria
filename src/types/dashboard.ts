@@ -28,10 +28,11 @@ export interface RubroCard {
 }
 
 export interface MenuItem {
-  title: string;
+  id: string;
+  label: string;
   icon: string;
   route: string;
-  description: string;
+  description?: string;
 }
 
 export interface Actualizacion {

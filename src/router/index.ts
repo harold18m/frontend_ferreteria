@@ -17,7 +17,7 @@ const routes = [
       {
         path: 'proformas',
         name: 'proformas',
-        component: () => import('@/views/pages/HomeView.vue'),
+        component: () => import('@/views/pages/ProformaView.vue'),
         meta: { title: 'Gestión de Proformas' }
       },
       {

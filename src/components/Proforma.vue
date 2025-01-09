@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ProformaForm from './ProformaForm.vue'
+import Formulario from './Proformas/Formulario.vue';
 
 const someData = ref('')
 
@@ -11,6 +12,7 @@ const someData = ref('')
 
 <template>
   <div>
-    <proforma-form></proforma-form>
+    <Formulario />
+    <!-- <proforma-form></proforma-form> -->
   </div>
 </template>

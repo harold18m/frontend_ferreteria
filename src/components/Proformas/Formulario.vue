@@ -1,6 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
+import Historial from '../Historial.vue';
+import { ref } from 'vue';
 </script>
 <template>
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit exercitationem quam beatae rerum natus reprehenderit
-  aliquid ratione sint accusamus quae corrupti, voluptatibus unde quisquam fugiat iusto maxime? Amet, quo voluptates.
+  <h1>Formulario</h1>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMenuItems } from '@/composables/menuItems';
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();

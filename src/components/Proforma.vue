@@ -12,7 +12,7 @@ const someData = ref('')
 
 <template>
   <div>
-    <Formulario />
-    <!-- <proforma-form></proforma-form> -->
+    <!-- <Formulario /> -->
+    <proforma-form></proforma-form>
   </div>
 </template>

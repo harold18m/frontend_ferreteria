@@ -1,15 +1,45 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue';
+import { inject, ref, onMounted, onUnmounted } from 'vue';
 import { useSidebarStore } from '@/stores/sidebarStore';
+import { useRouter } from 'vue-router';
 
 const isDark = inject('isDark', ref(false));
 const sidebarStore = useSidebarStore();
+const router = useRouter();
+const isProfileMenuOpen = ref(false);
 
 const toggleTheme = () => {
   isDark.value = !isDark.value;
   document.documentElement.classList.toggle('dark');
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
 };
+
+const toggleProfileMenu = () => {
+  isProfileMenuOpen.value = !isProfileMenuOpen.value;
+};
+
+const handleLogout = () => {
+  // Aquí puedes agregar la lógica de cierre de sesión
+  localStorage.removeItem('token'); // Si usas token
+  localStorage.clear(); // O limpiar todo el localStorage
+  router.push('/login'); // Redirigir al login
+};
+
+// Cerrar el menú si se hace clic fuera de él
+const closeMenuOnClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  if (!target.closest('.profile-menu-container')) {
+    isProfileMenuOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', closeMenuOnClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeMenuOnClickOutside);
+});
 </script>
 
 <template>
@@ -36,7 +66,7 @@ const toggleTheme = () => {
 
       <div class="flex items-center gap-4 md:gap-6">
         <!-- Botón de notificaciones -->
-        <button class="p-2 rounded-lg text-secondary-600 dark:text-gray-300
+        <!-- <button class="p-2 rounded-lg text-secondary-600 dark:text-gray-300
                              hover:bg-secondary-50 dark:hover:bg-secondary-600
                              focus:outline-none focus:ring-2 focus:ring-primary-400
                              relative">
@@ -45,7 +75,7 @@ const toggleTheme = () => {
                                rounded-full w-5 h-5 text-xs flex items-center justify-center">
             3
           </span>
-        </button>
+        </button> -->
 
         <button @click="toggleTheme" class="p-2 rounded-lg text-secondary-600 dark:text-gray-300
                                hover:bg-secondary-50 dark:hover:bg-secondary-600
@@ -54,18 +84,30 @@ const toggleTheme = () => {
         </button>
 
         <!-- Perfil de usuario -->
-        <div class="relative group">
-          <button class="flex items-center gap-2 p-2 rounded-lg
-                                 hover:bg-secondary-50 dark:hover:bg-secondary-600">
-            <div class="w-8 h-8 rounded-full bg-primary-400 flex items-center justify-center
-                                  text-secondary-700 font-semibold">
-              JD
+        <div class="relative group profile-menu-container">
+          <button @click="toggleProfileMenu"
+            class="flex items-center gap-2 p-2 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-600">
+            <div
+              class="w-8 h-8 rounded-full bg-primary-400 flex items-center justify-center text-secondary-700 font-semibold">
+              HF
             </div>
             <span class="hidden md:block text-secondary-700 dark:text-white">
-              John Doe
+              Hayde Flores
             </span>
             <i class="pi pi-chevron-down text-secondary-400"></i>
           </button>
+
+          <!-- Menú desplegable -->
+          <div v-show="isProfileMenuOpen"
+            class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-secondary-700 ring-1 ring-black ring-opacity-5">
+            <div class="py-1 flex flex-col items-center">
+              <button @click="handleLogout"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-secondary-600 flex items-center gap-2">
+                <i class="pi pi-sign-out"></i>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

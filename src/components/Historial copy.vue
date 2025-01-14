@@ -4,13 +4,24 @@ import { useProformas } from '@/composables/useProformas'
 import ProformasTable from './ProformasTable.vue'
 import ProformaDetalle from './ProformaDetalle.vue'
 import PrintableArea from './PrintableArea.vue'
+import { Proforma } from '@/types/proforma'
+
+interface PrintData {
+  // Define aquí la estructura de los datos de impresión
+  id: number
+  // ... otros campos
+}
+
+interface Proforma {
+
+}
 
 // Estado
-const searchTerm = ref('')
-const showModal = ref(false)
-const selectedProformaId = ref(null)
-const selectedProforma = ref(null)
-const printData = ref(null)
+const searchTerm = ref<string>('')
+const showModal = ref<boolean>(false)
+const selectedProformaId = ref<number | null>(null)
+const selectedProforma = ref<Proforma | null>(null)
+const printData = ref<PrintData | null>(null)
 
 // Composable de proformas
 const {
@@ -23,25 +34,25 @@ const {
 } = useProformas()
 
 // Métodos
-const searchProformas = async () => {
-  if (!isNaN(searchTerm.value)) {
+const searchProformas = async (): Promise<void> => {
+  if (!isNaN(Number(searchTerm.value))) {
     await searchProformasAPI(searchTerm.value)
   } else {
     console.error('El término de búsqueda debe ser un número válido.')
   }
 }
 
-const verProforma = (proformaId) => {
+const verProforma = (proformaId: number): void => {
   selectedProformaId.value = proformaId
   showModal.value = true
 }
 
-const closeModal = () => {
+const closeModal = (): void => {
   showModal.value = false
   selectedProformaId.value = null
 }
 
-const imprimirProforma = async (proformaId) => {
+const imprimirProforma = async (proformaId: number): Promise<void> => {
   try {
     printData.value = await getPrintData(proformaId)
     // Lógica de impresión...
@@ -51,7 +62,7 @@ const imprimirProforma = async (proformaId) => {
 }
 
 // Ciclo de vida
-onMounted(() => {
+onMounted((): void => {
   fetchProformas()
 })
 </script>

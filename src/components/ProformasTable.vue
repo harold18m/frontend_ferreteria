@@ -1,19 +1,22 @@
 <script setup lang="ts">
-const props = defineProps({
-  proformas: {
-    type: Array,
-    required: true
-  }
-})
 
-defineEmits(['ver-proforma', 'imprimir-proforma'])
+import { Proforma } from '@/types/proforma'
 
-const formatDate = (dateString) => {
+const props = defineProps<{
+  proformas: Proforma[]
+}>()
+
+const emit = defineEmits<{
+  'ver-proforma': [id: number]
+  'imprimir-proforma': [id: number]
+}>()
+
+const formatDate = (dateString: string): string => {
   const [year, month, day] = dateString.split('-')
   return `${day}/${month}/${year}`
 }
 
-const formatTime = (time) => {
+const formatTime = (time: string): string => {
   const [hour, minute] = time.split(':')
   const date = new Date()
   date.setHours(+hour)
@@ -64,12 +67,12 @@ const formatTime = (time) => {
             S/. {{ proforma.importe_total }}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-            <button @click="$emit('ver-proforma', proforma.id)"
+            <button @click="emit('ver-proforma', proforma.id)"
               class="inline-flex items-center justify-center p-2 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200"
               title="Ver detalle">
               <i class="pi pi-eye text-lg"></i>
             </button>
-            <button @click="$emit('imprimir-proforma', proforma.id)"
+            <button @click="emit('imprimir-proforma', proforma.id)"
               class="inline-flex items-center justify-center p-2 rounded-full text-green-600 hover:bg-green-100 transition-colors duration-200"
               title="Imprimir proforma">
               <i class="pi pi-print text-lg"></i>

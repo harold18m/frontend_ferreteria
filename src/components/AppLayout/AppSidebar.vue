@@ -28,10 +28,10 @@ const close = () => {
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-full bg-primary-400 flex items-center justify-center
                     text-secondary-700 font-bold text-lg">
-          JD
+          HF
         </div>
         <div class="flex flex-col">
-          <span class="font-medium">John Doe</span>
+          <span class="font-medium">Hayde Flores</span>
           <span class="text-sm text-gray-400">Administrador</span>
         </div>
         <button @click="close()" class="ml-auto focus:outline-none">

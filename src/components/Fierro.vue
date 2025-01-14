@@ -3,37 +3,20 @@
     <h1 class="text-2xl font-bold mb-4">Tasa de Cambio Dólar a Soles</h1>
     <div class="flex flex-col md:flex-row mb-4 my-2">
       <div class="mb-4 md:mb-0 md:mr-4">
-        <label for="usdToPenExchangeRate" class="block text-sm font-medium text-gray-600"
-          >Tasa de cambio $ a PEN:</label
-        >
-        <input
-          id="usdToPenExchangeRate"
-          v-model.number="usdToPenExchangeRate"
-          type="number"
-          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800 md:w-32"
-        />
+        <label for="usdToPenExchangeRate" class="block text-sm font-medium text-gray-600">Tasa de cambio $ a
+          PEN:</label>
+        <input id="usdToPenExchangeRate" v-model.number="usdToPenExchangeRate" type="number"
+          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800 md:w-32" />
       </div>
       <div class="mb-4 md:mb-0 md:mr-4">
-        <label for="pcompra" class="block text-sm font-medium text-gray-600"
-          >Precio de compra $:</label
-        >
-        <input
-          name="pcompra"
-          v-model.number="pcompra"
-          type="number"
-          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800  md:w-32"
-        />
+        <label for="pcompra" class="block text-sm font-medium text-gray-600">Precio de compra $:</label>
+        <input name="pcompra" v-model.number="pcompra" type="number"
+          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800  md:w-32" />
       </div>
       <div class="mb-4 md:mb-0">
-        <label for="pventa" class="block text-sm font-medium text-gray-600"
-          >Precio de venta $:</label
-        >
-        <input
-          name="pventa"
-          v-model.number="pventa"
-          type="number"
-          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800 md:w-32"
-        />
+        <label for="pventa" class="block text-sm font-medium text-gray-600">Precio de venta $:</label>
+        <input name="pventa" v-model.number="pventa" type="number"
+          class="mt-1 p-2 border rounded-md w-full bg-white dark:bg-gray-800 md:w-32" />
       </div>
     </div>
 
